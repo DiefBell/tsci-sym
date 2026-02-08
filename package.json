@@ -1,0 +1,19 @@
+{
+  "name": "sym-js",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "scripts": {
+	"start": "bun run src/index.ts"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+	"@boperators/plugin-bun": "0.1.0",
+	"@boperators/plugin-ts-language-server": "0.1.0",
+	"boperators": "0.1.0"
+  },
+  "peerDependencies": {
+	"boperators": "0.1.0",
+    "typescript": "^5"
+  }
+}
