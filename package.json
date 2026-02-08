@@ -1,10 +1,10 @@
 {
   "name": "sym-js",
-  "module": "index.ts",
+  "module": "dist/index.sj",
   "type": "module",
   "private": true,
   "scripts": {
-	"start": "bun run src/index.ts"
+	"test": "bun run src/test.ts"
   },
   "devDependencies": {
     "@types/bun": "latest",

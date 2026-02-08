@@ -1,1 +1,1 @@
-preload = ["./preload.ts"]
+preload = ["./node_modules/@boperators/plugin-bun/index.ts"]
