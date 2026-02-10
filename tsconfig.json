@@ -1,13 +1,8 @@
 {
-	"include": [
-		"src",
-		"preload.ts"
-	],
+	"include": ["src", "preload.ts"],
 	"compilerOptions": {
 		// Environment setup & latest features
-		"lib": [
-			"ESNext"
-		],
+		"lib": ["ESNext"],
 		"target": "ESNext",
 		"module": "Preserve",
 		"moduleDetection": "force",

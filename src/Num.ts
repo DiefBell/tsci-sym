@@ -1,11 +1,11 @@
 import { Expr } from "./Expr";
 
 export class Num extends Expr {
-  constructor(public value: number) {
-    super();
-  }
+	constructor(public value: number) {
+		super();
+	}
 
-  toString() {
-    return this.value.toString();
-  }
+	toString() {
+		return this.value.toString();
+	}
 }

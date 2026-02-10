@@ -19,6 +19,6 @@ console.log(`v4 === v5? ${v4 === v5}`); // expect false
 const x = new Sym("x");
 const y = new Sym("y");
 
-const expr = x + 2*y + 1;
+const expr = x + 2 * y + 1;
 
 console.log(expr.toString());

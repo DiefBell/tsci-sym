@@ -1,19 +1,26 @@
 {
-  "name": "sym-js",
-  "module": "dist/index.sj",
-  "type": "module",
-  "private": true,
-  "scripts": {
-	"test": "bun run src/test.ts"
-  },
-  "devDependencies": {
-    "@types/bun": "latest",
-	"@boperators/plugin-bun": "0.1.0",
-	"@boperators/plugin-ts-language-server": "0.1.0",
-	"boperators": "0.1.0"
-  },
-  "peerDependencies": {
-	"boperators": "0.1.0",
-    "typescript": "^5"
-  }
+	"name": "sym-js",
+	"module": "dist/index.sj",
+	"type": "module",
+	"private": true,
+	"scripts": {
+		"test": "bun run src/test.ts",
+		"transform": "rm -rf ./transformed && boperate --ts-out ./transformed --maps-out ./transformed",
+		"test:transformed": "bun run ./transformed/src/test.ts",
+		"check": "biome check .",
+		"check:unsafe": "biome check --write --unsafe .",
+		"check:write": "biome check --write .",
+		"format": "biome format --write ."
+	},
+	"peerDependencies": {
+		"typescript": "^5"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "^2.3.14",
+		"@boperators/cli": "link:@boperators/cli",
+		"@boperators/plugin-bun": "link:@boperators/plugin-bun",
+		"@boperators/plugin-ts-language-server": "link:@boperators/plugin-ts-language-server",
+		"@types/bun": "^1.1.16",
+		"boperators": "link:boperators"
+	}
 }
