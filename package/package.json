@@ -1,0 +1,24 @@
+{
+	"name": "sym.js",
+	"module": "dist/index.sj",
+	"type": "module",
+	"private": true,
+	"scripts": {
+		"transform": "rm -rf ./transformed && boperate --ts-out ./transformed --maps-out ./transformed",
+		"test:transformed": "bun run ./transformed/test.ts",
+		"check": "biome check .",
+		"check:unsafe": "biome check --write --unsafe .",
+		"check:write": "biome check --write .",
+		"format": "biome format --write ."
+	},
+	"peerDependencies": {
+		"typescript": "^5"
+	},
+	"devDependencies": {
+		"@boperators/cli": "link:@boperators/cli",
+		"@boperators/plugin-bun": "link:@boperators/plugin-bun",
+		"@boperators/plugin-ts-language-server": "link:@boperators/plugin-ts-language-server",
+		"@types/bun": "^1.1.16",
+		"boperators": "link:boperators"
+	}
+}
