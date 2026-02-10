@@ -12,3 +12,5 @@ export class Mul extends Expr {
 		return `(${this.left} * ${this.right})`;
 	}
 }
+
+Expr.Mul = Mul;

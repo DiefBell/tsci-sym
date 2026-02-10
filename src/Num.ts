@@ -9,3 +9,5 @@ export class Num extends Expr {
 		return this.value.toString();
 	}
 }
+
+Expr.Num = Num;

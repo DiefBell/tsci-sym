@@ -6,7 +6,7 @@
 	"scripts": {
 		"test": "bun run src/test.ts",
 		"transform": "rm -rf ./transformed && boperate --ts-out ./transformed --maps-out ./transformed",
-		"test:transformed": "bun run ./transformed/src/test.ts",
+		"test:transformed": "bun run ./transformed/test.ts",
 		"check": "biome check .",
 		"check:unsafe": "biome check --write --unsafe .",
 		"check:write": "biome check --write .",

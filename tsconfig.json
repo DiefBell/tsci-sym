@@ -1,5 +1,5 @@
 {
-	"include": ["src", "preload.ts"],
+	"include": ["src", "preload.ts", "test.ts"],
 	"compilerOptions": {
 		// Environment setup & latest features
 		"lib": ["ESNext"],

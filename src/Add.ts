@@ -12,3 +12,5 @@ export class Add extends Expr {
 		return `(${this.left} + ${this.right})`;
 	}
 }
+
+Expr.Add = Add;
