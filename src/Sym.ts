@@ -8,4 +8,8 @@ export class Sym extends Expr {
 	toString() {
 		return this.name;
 	}
+
+	simplify(): Expr {
+		return this; // already simplest
+	}
 }

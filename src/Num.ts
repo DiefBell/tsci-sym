@@ -8,6 +8,10 @@ export class Num extends Expr {
 	toString() {
 		return this.value.toString();
 	}
+
+	simplify(): Expr {
+		return this; // already simplest
+	}
 }
 
 Expr.Num = Num;

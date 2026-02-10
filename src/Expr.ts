@@ -1,4 +1,5 @@
 export abstract class Expr {
+	abstract simplify(): Expr;
 	abstract toString(): string;
 
 	static readonly "+" = [
@@ -13,15 +14,38 @@ export abstract class Expr {
 		(lhs: number, rhs: Expr): Expr => new Expr.Mul(new Expr.Num(lhs), rhs),
 	] as const;
 
+	static readonly "-" = [
+		// unary
+		(inner: Expr): Expr => new Expr.Neg(inner),
+
+		// binary
+		(lhs: Expr, rhs: Expr): Expr => lhs + Expr["-"][0](rhs),
+		(lhs: Expr, rhs: number): Expr => lhs + Expr["-"][0](new Expr.Num(rhs)),
+		(lhs: number, rhs: Expr): Expr => new Expr.Num(lhs) + Expr["-"][0](rhs),
+	] as const;
+
+	static readonly "**" = [
+		(lhs: Expr, rhs: Expr): Expr => new Expr.Pow(lhs, rhs),
+		(lhs: number, rhs: Expr): Expr => new Expr.Pow(new Expr.Num(lhs), rhs),
+		(lhs: Expr, rhs: number): Expr => new Expr.Pow(lhs, new Expr.Num(rhs)),
+	] as const;
+
 	public declare static Add: new (
-		lhs: Expr | number,
-		rhs: Expr | number,
+		lhs: Expr,
+		rhs: Expr,
 	) => Expr;
 	public declare static Mul: new (
-		lhs: Expr | number,
-		rhs: Expr | number,
+		lhs: Expr,
+		rhs: Expr,
 	) => Expr;
 	public declare static Num: new (
 		value: number,
+	) => Expr;
+	public declare static Neg: new (
+		inner: Expr,
+	) => Expr;
+	public declare static Pow: new (
+		base: Expr,
+		exponent: Expr,
 	) => Expr;
 }
