@@ -15,8 +15,8 @@
 	},
 	"scripts": {
 		"start": "bun run ./src/index.ts",
-		"transform": "rm -rf ./transformed && boperate --ts-out ./transformed --maps-out ./transformed",
-		"start:transformed": "bun run ./transformed/src/index.ts",
+		"transform": "rm -rf ./transformed && boperate compile --ts-out ./transformed --maps-out ./transformed",
+		"start:transformed": "bun run ./transformed/index.ts",
 		"build": "tspc",
 		"start:built": "node ./dist/index.ts"
 	}

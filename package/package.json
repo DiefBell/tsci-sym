@@ -13,7 +13,8 @@
 		"check:write": "biome check --write .",
 		"format": "biome format --write .",
 		"build": "tsc",
-		"watch": "tsc -w"
+		"watch": "tsc -w",
+		"validate": "boperate validate"
 	},
 	"peerDependencies": {
 		"typescript": "^5",
