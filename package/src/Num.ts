@@ -1,8 +1,13 @@
 import { Expr } from "./Expr";
 
 export class Num extends Expr {
-	constructor(public value: number) {
+	static readonly #cache = new Map<number, Num>();
+
+	constructor(public readonly value: number) {
+		const cached = Num.#cache.get(value);
+		if (cached) return cached;
 		super();
+		Num.#cache.set(value, this);
 	}
 
 	toString() {
