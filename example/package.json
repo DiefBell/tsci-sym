@@ -4,12 +4,12 @@
 		"sym.js": "link:sym.js"
 	},
 	"devDependencies": {
-		"@boperators/cli": "link:@boperators/cli",
-		"@boperators/plugin-bun": "link:@boperators/plugin-bun",
-		"@boperators/plugin-ts-language-server": "link:@boperators/plugin-ts-language-server",
-		"@boperators/plugin-tsc": "link:@boperators/plugin-tsc",
+		"@boperators/cli": "^0.1.0",
+		"@boperators/plugin-bun": "^0.1.0",
+		"@boperators/plugin-ts-language-server": "^0.1.0",
+		"@boperators/plugin-tsc": "^0.1.0",
 		"@types/bun": "^1.1.16",
-		"boperators": "link:boperators",
+		"boperators": "^0.1.0",
 		"ts-patch": "^3.3.0",
 		"typescript": "^5.9.3"
 	},

@@ -15,6 +15,16 @@ export class Add extends Expr {
 		if (this.right instanceof Neg) {
 			return `(${this.left} - ${this.right.inner})`;
 		}
+		if (
+			this.right instanceof Mul &&
+			this.right.left instanceof Num &&
+			this.right.left.value < 0
+		) {
+			const absCoeff = -this.right.left.value;
+			const base = this.right.right;
+			const pos = absCoeff === 1 ? base : new Mul(new Num(absCoeff), base);
+			return `(${this.left} - ${pos})`;
+		}
 		return `(${this.left} + ${this.right})`;
 	}
 
@@ -45,19 +55,36 @@ export class Add extends Expr {
 		}
 		if (sum !== 0) rest.push(new Num(sum));
 
-		// Combine exact duplicate terms: x + x -> 2*x
-		const combined: Expr[] = [];
-		const counts = new Map<string, number>();
+		// Combine like terms by extracting (coefficient, base) from each term
+		function extractCoeff(term: Expr): [number, Expr] {
+			if (term instanceof Mul) {
+				if (term.left instanceof Num) return [term.left.value, term.right];
+				if (term.right instanceof Num) return [term.right.value, term.left];
+			}
+			return [1, term];
+		}
+
+		const coeffMap = new Map<string, { coeff: number; base: Expr }>();
 		for (const t of rest) {
-			const key = t.toString();
-			if (!counts.has(key)) counts.set(key, 0);
-			counts.set(key, counts.get(key)! + 1);
+			const [coeff, base] = extractCoeff(t);
+			const key = base.toString();
+			const existing = coeffMap.get(key);
+			if (existing) existing.coeff += coeff;
+			else coeffMap.set(key, { coeff, base });
 		}
-		for (const [key, count] of counts.entries()) {
-			const first = rest.find((e) => e.toString() === key)!;
-			if (count === 1) combined.push(first);
-			else combined.push(new Mul(new Num(count), first).simplify());
+
+		const combined: Expr[] = [];
+		for (const { coeff, base } of coeffMap.values()) {
+			if (coeff === 0) continue;
+			if (coeff === 1) combined.push(base);
+			else combined.push(new Mul(new Num(coeff), base).simplify());
 		}
+
+		// Put positive-coefficient terms first so toString can render negatives as subtraction
+		combined.sort((a) => {
+			const [coeff] = extractCoeff(a);
+			return coeff < 0 ? 1 : -1;
+		});
 
 		// Rebuild nested Add
 		if (combined.length === 0) return new Num(0);

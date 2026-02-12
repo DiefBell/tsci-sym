@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__mcp-openmemory__recall_memory_abstract",
+      "mcp__mcp-openmemory__save_memory"
+    ]
+  }
+}

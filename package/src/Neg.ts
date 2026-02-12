@@ -1,4 +1,6 @@
+import { Add } from "./Add";
 import { Expr } from "./Expr";
+import { Mul } from "./Mul";
 import { Num } from "./Num";
 
 /**
@@ -18,13 +20,15 @@ export class Neg extends Expr {
 	simplify(): Expr {
 		const inner = this.inner.simplify();
 
-		// double negative
-		if (inner instanceof Neg) return inner.inner.simplify();
-
 		// numeric negation
 		if (inner instanceof Num) return new Num(-inner.value);
 
-		return new Neg(inner);
+		// distribute over Add: -(a + b) → -a + -b
+		if (inner instanceof Add)
+			return new Add(new Neg(inner.left), new Neg(inner.right)).simplify();
+
+		// normalize to Mul(-1, ...) — consistent with SymPy's representation
+		return new Mul(new Num(-1), inner).simplify();
 	}
 }
 

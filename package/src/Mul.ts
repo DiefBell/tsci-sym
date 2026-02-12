@@ -1,6 +1,5 @@
 import { Add } from "./Add";
 import { Expr } from "./Expr";
-import { Neg } from "./Neg";
 import { Num } from "./Num";
 import { Pow } from "./Pow";
 import { Sym } from "./Sym";
@@ -15,6 +14,7 @@ export class Mul extends Expr {
 
 	toString() {
 		if (this.left instanceof Num && !(this.right instanceof Num)) {
+			if (this.left.value === -1) return `-${this.right}`;
 			return `${this.left}${this.right}`;
 		}
 		if (this.right instanceof Num && !(this.left instanceof Num)) {
@@ -22,12 +22,6 @@ export class Mul extends Expr {
 		}
 		if (this.left instanceof Sym && this.right instanceof Sym) {
 			return `${this.left}${this.right}`;
-		}
-		if (this.left instanceof Neg) {
-			return `${this.left}${this.right};`;
-		}
-		if (this.right instanceof Neg) {
-			return `${this.right}${this.left}`;
 		}
 
 		return `(${this.left} * ${this.right})`;
@@ -37,16 +31,24 @@ export class Mul extends Expr {
 		const l = this.left.simplify();
 		const r = this.right.simplify();
 
-		// Double negatives cancel
-		if (l instanceof Neg && r instanceof Neg) {
-			return new Mul(l.inner, r.inner).simplify();
+		// Pull coefficient to front from left: Mul(Num(a), e1) * e2 → Num(a) * (e1 * e2)
+		if (l instanceof Mul && l.left instanceof Num) {
+			return new Mul(l.left, new Mul(l.right, r).simplify()).simplify();
 		}
-		// One negative makes whole expression negative
-		if (l instanceof Neg) {
-			return new Neg(new Mul(l.inner, r).simplify()).simplify();
+
+		// Merge adjacent numeric coefficients: Num(a) * (Num(b) * e) → Num(a*b) * e
+		if (l instanceof Num && r instanceof Mul && r.left instanceof Num) {
+			return new Mul(new Num(l.value * r.left.value), r.right).simplify();
 		}
-		if (r instanceof Neg) {
-			return new Neg(new Mul(l, r.inner).simplify()).simplify();
+
+		// Pull coefficient to front from right: e1 * (Num(a) * e2) → Num(a) * (e1 * e2)
+		if (!(l instanceof Num) && r instanceof Mul && r.left instanceof Num) {
+			return new Mul(r.left, new Mul(l, r.right).simplify()).simplify();
+		}
+
+		// Canonicalize Sym order: Mul(y, x) → Mul(x, y) so like-term keys are consistent
+		if (l instanceof Sym && r instanceof Sym && l.name > r.name) {
+			return new Mul(r, l);
 		}
 
 		// Powers to two Syms
@@ -104,10 +106,6 @@ export class Mul extends Expr {
 		}
 		if (r instanceof Add) {
 			return new Add(new Mul(l, r.left), new Mul(l, r.right)).simplify();
-		}
-
-		if (l instanceof Neg && r instanceof Neg) {
-			return new Mul(l.inner, r.inner).simplify();
 		}
 
 		return this;

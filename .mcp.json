@@ -2,7 +2,7 @@
 	"mcpServers": {
 		"boperators": {
 			"command": "npx",
-			"args": ["--yes", "@boperators/mcp-server"]
+			"args": ["--yes", "@boperators/mcp-server@latest"]
 		},
 		"mcp-openmemory": {
 			"command": "npx",
