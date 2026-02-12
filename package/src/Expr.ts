@@ -29,6 +29,12 @@ export abstract class Expr {
 			new this.Add(new Expr.Num(lhs), Expr["-"][0](rhs)),
 	] as const;
 
+	static readonly "/" = [
+		(lhs: Expr, rhs: Expr): Expr => new Expr.Mul(lhs, new Expr.Pow(rhs, new Expr.Num(-1))),
+		(lhs: Expr, rhs: number): Expr => new Expr.Mul(lhs, new Expr.Rational(1, rhs)),
+		(lhs: number, rhs: Expr): Expr => new Expr.Mul(new Expr.Num(lhs), new Expr.Pow(rhs, new Expr.Num(-1))),
+	] as const;
+
 	static readonly "**" = [
 		(lhs: Expr, rhs: Expr): Expr => new Expr.Pow(lhs, rhs),
 		(lhs: number, rhs: Expr): Expr => new Expr.Pow(new Expr.Num(lhs), rhs),
@@ -52,5 +58,9 @@ export abstract class Expr {
 	public declare static Pow: new (
 		base: Expr,
 		exponent: Expr,
+	) => Expr;
+	public declare static Rational: new (
+		numerator: number | bigint,
+		denominator?: number | bigint,
 	) => Expr;
 }

@@ -12,9 +12,10 @@
 		"check:unsafe": "biome check --write --unsafe .",
 		"check:write": "biome check --write .",
 		"format": "biome format --write .",
-		"build": "tsc",
+		"build": "tsc && bun run validate",
 		"watch": "tsc -w",
-		"validate": "boperate validate"
+		"validate": "boperate validate",
+		"typecheck": "tsc --no-emit"
 	},
 	"peerDependencies": {
 		"typescript": "^5",

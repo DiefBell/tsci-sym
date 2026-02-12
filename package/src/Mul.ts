@@ -2,7 +2,22 @@ import { Add } from "./Add";
 import { Expr } from "./Expr";
 import { Num } from "./Num";
 import { Pow } from "./Pow";
+import { Rational } from "./Rational";
 import { Sym } from "./Sym";
+
+/** Returns true if the expression is a numeric coefficient (Num or Rational). */
+function isCoeff(e: Expr): e is Num | Rational {
+	return e instanceof Num || e instanceof Rational;
+}
+
+/** Multiplies two coefficients, returning Num when the result is an integer, Rational otherwise. */
+function mulCoeffs(a: Num | Rational, b: Num | Rational): Num | Rational {
+	if (a instanceof Num && b instanceof Num) return new Num(a.value * b.value);
+	const ra = a instanceof Rational ? a : new Rational(a.value);
+	const rb = b instanceof Rational ? b : new Rational(b.value);
+	const result = ra.mul(rb);
+	return result.denominator === 1n ? new Num(Number(result.numerator)) : result;
+}
 
 export class Mul extends Expr {
 	constructor(
@@ -17,11 +32,11 @@ export class Mul extends Expr {
 	}
 
 	toString() {
-		if (this.left instanceof Num && !(this.right instanceof Num)) {
-			if (this.left.value === -1) return `-${this.right}`;
+		if (isCoeff(this.left) && !isCoeff(this.right)) {
+			if (this.left instanceof Num && this.left.value === -1) return `-${this.right}`;
 			return `${this.left}${this.right}`;
 		}
-		if (this.right instanceof Num && !(this.left instanceof Num)) {
+		if (isCoeff(this.right) && !isCoeff(this.left)) {
 			return `${this.right}${this.left}`;
 		}
 		if (this.left instanceof Sym && this.right instanceof Sym) {
@@ -35,18 +50,18 @@ export class Mul extends Expr {
 		const l = this.left.simplify();
 		const r = this.right.simplify();
 
-		// Pull coefficient to front from left: Mul(Num(a), e1) * e2 → Num(a) * (e1 * e2)
-		if (l instanceof Mul && l.left instanceof Num) {
+		// Pull coefficient to front from left: Mul(coeff, e1) * e2 → coeff * (e1 * e2)
+		if (l instanceof Mul && isCoeff(l.left)) {
 			return new Mul(l.left, new Mul(l.right, r).simplify()).simplify();
 		}
 
-		// Merge adjacent numeric coefficients: Num(a) * (Num(b) * e) → Num(a*b) * e
-		if (l instanceof Num && r instanceof Mul && r.left instanceof Num) {
-			return new Mul(new Num(l.value * r.left.value), r.right).simplify();
+		// Merge adjacent coefficients: coeff_a * (coeff_b * e) → (a*b) * e
+		if (isCoeff(l) && r instanceof Mul && isCoeff(r.left)) {
+			return new Mul(mulCoeffs(l, r.left), r.right).simplify();
 		}
 
-		// Pull coefficient to front from right: e1 * (Num(a) * e2) → Num(a) * (e1 * e2)
-		if (!(l instanceof Num) && r instanceof Mul && r.left instanceof Num) {
+		// Pull coefficient to front from right: e1 * (coeff * e2) → coeff * (e1 * e2)
+		if (!isCoeff(l) && r instanceof Mul && isCoeff(r.left)) {
 			return new Mul(r.left, new Mul(l, r.right).simplify()).simplify();
 		}
 
@@ -71,15 +86,16 @@ export class Mul extends Expr {
 			(l instanceof Num && l.value === 0) ||
 			(r instanceof Num && r.value === 0)
 		)
-			// multiply by 0
 			return new Num(0);
 
 		// multiply by 1
 		if (l instanceof Num && l.value === 1) return r;
 		if (r instanceof Num && r.value === 1) return l;
+		if (l instanceof Rational && l.numerator === 1n && l.denominator === 1n) return r;
+		if (r instanceof Rational && r.numerator === 1n && r.denominator === 1n) return l;
 
-		// numeric folding
-		if (l instanceof Num && r instanceof Num) return new Num(l.value * r.value);
+		// coefficient * coefficient folding
+		if (isCoeff(l) && isCoeff(r)) return mulCoeffs(l, r);
 
 		if (l instanceof Mul) {
 			if (l.left.key() === r.key()) {
