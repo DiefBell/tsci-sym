@@ -1,8 +1,15 @@
 {
 	"mcpServers": {
 		"boperators": {
-			"command": "node",
-			"args": ["../boperators/plugins/mcp/dist/index.js"]
+			"command": "npx",
+			"args": ["@boperators/mcp-server"]
+		},
+		"mcp-openmemory": {
+			"command": "npx",
+			"args": ["@peakmojo/mcp-openmemory@latest"],
+			"env": {
+				"MEMORY_DB_PATH": "./.mcp/mcp-memory.sqlite"
+			}
 		}
 	}
 }
