@@ -14,6 +14,10 @@ export class Sym extends Expr {
 		return this.name;
 	}
 
+	key() {
+		return `Sym(${this.name})`;
+	}
+
 	simplify(): Expr {
 		return this; // already simplest
 	}

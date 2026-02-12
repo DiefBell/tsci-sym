@@ -2,6 +2,9 @@ export abstract class Expr {
 	abstract simplify(): Expr;
 	abstract toString(): string;
 
+	/** Structural identity key, distinct from display toString(). Used for comparing expression trees. */
+	abstract key(): string;
+
 	static readonly "+" = [
 		(lhs: Expr, rhs: Expr): Expr => new Expr.Add(lhs, rhs),
 		(lhs: Expr, rhs: number): Expr => new Expr.Add(lhs, new Expr.Num(rhs)),

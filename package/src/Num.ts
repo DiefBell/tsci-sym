@@ -9,6 +9,10 @@ export class Num extends Expr {
 		return this.value.toString();
 	}
 
+	key() {
+		return `Num(${this.value})`;
+	}
+
 	simplify(): Expr {
 		return this; // already simplest
 	}

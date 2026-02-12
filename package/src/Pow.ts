@@ -9,6 +9,10 @@ export class Pow extends Expr {
 		super();
 	}
 
+	key() {
+		return `Pow(${this.base.key()},${this.exponent.key()})`;
+	}
+
 	toString() {
 		return `${this.base}^${this.exponent}`;
 	}

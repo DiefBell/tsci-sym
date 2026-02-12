@@ -11,6 +11,10 @@ export class Add extends Expr {
 		super();
 	}
 
+	key() {
+		return `Add(${this.left.key()},${this.right.key()})`;
+	}
+
 	toString() {
 		if (this.right instanceof Neg) {
 			return `(${this.left} - ${this.right.inner})`;

@@ -12,6 +12,10 @@ export class Mul extends Expr {
 		super();
 	}
 
+	key() {
+		return `Mul(${this.left.key()},${this.right.key()})`;
+	}
+
 	toString() {
 		if (this.left instanceof Num && !(this.right instanceof Num)) {
 			if (this.left.value === -1) return `-${this.right}`;

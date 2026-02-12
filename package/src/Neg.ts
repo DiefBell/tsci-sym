@@ -17,6 +17,10 @@ export class Neg extends Expr {
 		return `-${this.inner}`;
 	}
 
+	key() {
+		return `Neg(${this.inner.key()})`;
+	}
+
 	simplify(): Expr {
 		const inner = this.inner.simplify();
 
