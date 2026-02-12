@@ -55,22 +55,16 @@ export class Mul extends Expr {
 			return new Mul(r, l);
 		}
 
-		// Powers to two Syms
-		if (l === r) return new Pow(l, new Num(2));
+		// e * e → e^2, and power combination rules
+		if (l.key() === r.key()) return new Pow(l, new Num(2));
 
-		if (l instanceof Pow && l.base === r)
-			// always use base from left operand
-			// (is this correct to do? We ideally want semantically
-			// identical expressions to eventually simplify to a single instance)
+		if (l instanceof Pow && l.base.key() === r.key())
 			return new Pow(l.base, new Add(l.exponent, new Num(1)));
 
-		if (r instanceof Pow && r.base === l)
-			// always use base from left operand
+		if (r instanceof Pow && r.base.key() === l.key())
 			return new Pow(l, new Add(r.exponent, new Num(1)));
 
-		// Bases might not be strictly equal as they're not symbols,
-		// do we need some way to check if they're essentially the same?
-		if (r instanceof Pow && l instanceof Pow && r.base === l.base)
+		if (l instanceof Pow && r instanceof Pow && l.base.key() === r.base.key())
 			return new Pow(l.base, new Add(l.exponent, r.exponent));
 
 		if (
@@ -87,19 +81,19 @@ export class Mul extends Expr {
 		// numeric folding
 		if (l instanceof Num && r instanceof Num) return new Num(l.value * r.value);
 
-		if (l instanceof Mul && r instanceof Sym) {
-			if (l.left === r) {
+		if (l instanceof Mul) {
+			if (l.left.key() === r.key()) {
 				return new Mul(new Pow(l.left, new Num(2)), l.right).simplify();
 			}
-			if (l.right === r) {
+			if (l.right.key() === r.key()) {
 				return new Mul(l.left, new Pow(l.right, new Num(2))).simplify();
 			}
 		}
-		if (r instanceof Mul && l instanceof Sym) {
-			if (r.left === l) {
+		if (r instanceof Mul) {
+			if (r.left.key() === l.key()) {
 				return new Mul(new Pow(r.left, new Num(2)), r.right).simplify();
 			}
-			if (r.right === l) {
+			if (r.right.key() === l.key()) {
 				return new Mul(r.left, new Pow(r.right, new Num(2))).simplify();
 			}
 		}

@@ -71,7 +71,7 @@ export class Add extends Expr {
 		const coeffMap = new Map<string, { coeff: number; base: Expr }>();
 		for (const t of rest) {
 			const [coeff, base] = extractCoeff(t);
-			const key = base.toString();
+			const key = base.key();
 			const existing = coeffMap.get(key);
 			if (existing) existing.coeff += coeff;
 			else coeffMap.set(key, { coeff, base });
