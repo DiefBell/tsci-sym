@@ -2,6 +2,9 @@
 	"workspaces": [
 		"package"
 	],
+	"scripts": {
+		"watch": "bun run --filter=sym.js watch"
+	},
 	"devDependencies": {
 		"@biomejs/biome": "^2.3.14"
 	}

@@ -19,9 +19,11 @@ export abstract class Expr {
 		(inner: Expr): Expr => new Expr.Neg(inner),
 
 		// binary
-		(lhs: Expr, rhs: Expr): Expr => lhs + Expr["-"][0](rhs),
-		(lhs: Expr, rhs: number): Expr => lhs + Expr["-"][0](new Expr.Num(rhs)),
-		(lhs: number, rhs: Expr): Expr => new Expr.Num(lhs) + Expr["-"][0](rhs),
+		(lhs: Expr, rhs: Expr): Expr => new this.Add(lhs, Expr["-"][0](rhs)),
+		(lhs: Expr, rhs: number): Expr =>
+			new this.Add(lhs, Expr["-"][0](new Expr.Num(rhs))),
+		(lhs: number, rhs: Expr): Expr =>
+			new this.Add(new Expr.Num(lhs), Expr["-"][0](rhs)),
 	] as const;
 
 	static readonly "**" = [

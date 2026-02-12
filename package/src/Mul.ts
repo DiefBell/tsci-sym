@@ -1,7 +1,9 @@
 import { Add } from "./Add";
 import { Expr } from "./Expr";
+import { Neg } from "./Neg";
 import { Num } from "./Num";
 import { Pow } from "./Pow";
+import { Sym } from "./Sym";
 
 export class Mul extends Expr {
 	constructor(
@@ -12,12 +14,40 @@ export class Mul extends Expr {
 	}
 
 	toString() {
+		if (this.left instanceof Num && !(this.right instanceof Num)) {
+			return `${this.left}${this.right}`;
+		}
+		if (this.right instanceof Num && !(this.left instanceof Num)) {
+			return `${this.right}${this.left}`;
+		}
+		if (this.left instanceof Sym && this.right instanceof Sym) {
+			return `${this.left}${this.right}`;
+		}
+		if (this.left instanceof Neg) {
+			return `${this.left}${this.right};`;
+		}
+		if (this.right instanceof Neg) {
+			return `${this.right}${this.left}`;
+		}
+
 		return `(${this.left} * ${this.right})`;
 	}
 
 	simplify(): Expr {
 		const l = this.left.simplify();
 		const r = this.right.simplify();
+
+		// Double negatives cancel
+		if (l instanceof Neg && r instanceof Neg) {
+			return new Mul(l.inner, r.inner).simplify();
+		}
+		// One negative makes whole expression negative
+		if (l instanceof Neg) {
+			return new Neg(new Mul(l.inner, r).simplify()).simplify();
+		}
+		if (r instanceof Neg) {
+			return new Neg(new Mul(l, r.inner).simplify()).simplify();
+		}
 
 		// Powers to two Syms
 		if (l === r) return new Pow(l, new Num(2));
@@ -51,6 +81,23 @@ export class Mul extends Expr {
 		// numeric folding
 		if (l instanceof Num && r instanceof Num) return new Num(l.value * r.value);
 
+		if (l instanceof Mul && r instanceof Sym) {
+			if (l.left === r) {
+				return new Mul(new Pow(l.left, new Num(2)), l.right).simplify();
+			}
+			if (l.right === r) {
+				return new Mul(l.left, new Pow(l.right, new Num(2))).simplify();
+			}
+		}
+		if (r instanceof Mul && l instanceof Sym) {
+			if (r.left === l) {
+				return new Mul(new Pow(r.left, new Num(2)), r.right).simplify();
+			}
+			if (r.right === l) {
+				return new Mul(r.left, new Pow(r.right, new Num(2))).simplify();
+			}
+		}
+
 		// distribute over Add: (a + b)*c => a*c + b*c
 		if (l instanceof Add) {
 			return new Add(new Mul(l.left, r), new Mul(l.right, r)).simplify();
@@ -59,7 +106,11 @@ export class Mul extends Expr {
 			return new Add(new Mul(l, r.left), new Mul(l, r.right)).simplify();
 		}
 
-		return new Mul(l, r);
+		if (l instanceof Neg && r instanceof Neg) {
+			return new Mul(l.inner, r.inner).simplify();
+		}
+
+		return this;
 	}
 }
 

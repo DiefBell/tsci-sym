@@ -10,7 +10,7 @@ export class Pow extends Expr {
 	}
 
 	toString() {
-		return `(${this.base}**${this.exponent})`;
+		return `${this.base}^${this.exponent}`;
 	}
 
 	simplify(): Expr {

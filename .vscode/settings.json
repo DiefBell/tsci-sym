@@ -19,5 +19,8 @@
 	},
 	"files.eol": "\n",
 	"files.insertFinalNewline": true,
-	"files.trimFinalNewlines": true
+	"files.trimFinalNewlines": true,
+	"files.associations": {
+		"./example/package.json": "jsonc"
+	}
 }

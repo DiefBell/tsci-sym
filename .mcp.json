@@ -1,0 +1,8 @@
+{
+	"mcpServers": {
+		"boperators": {
+			"command": "node",
+			"args": ["../boperators/plugins/mcp/dist/index.js"]
+		}
+	}
+}

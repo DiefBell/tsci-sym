@@ -1,5 +1,6 @@
 import { Expr } from "./Expr";
 import { Mul } from "./Mul";
+import { Neg } from "./Neg";
 import { Num } from "./Num";
 
 export class Add extends Expr {
@@ -11,6 +12,9 @@ export class Add extends Expr {
 	}
 
 	toString() {
+		if (this.right instanceof Neg) {
+			return `(${this.left} - ${this.right.inner})`;
+		}
 		return `(${this.left} + ${this.right})`;
 	}
 

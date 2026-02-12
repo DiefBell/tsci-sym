@@ -12,7 +12,7 @@ export class Neg extends Expr {
 	}
 
 	toString() {
-		return `(-${this.inner})`;
+		return `-${this.inner}`;
 	}
 
 	simplify(): Expr {
