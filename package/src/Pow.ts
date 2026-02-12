@@ -53,6 +53,10 @@ export class Pow extends Expr {
 		)
 			return new Rational(1, base.value).simplify();
 
+		// Rational^(-1) → flip numerator and denominator
+		if (base instanceof Rational && exp instanceof Num && exp.value === -1)
+			return new Rational(base.denominator, base.numerator).simplify();
+
 		// numeric folding
 		if (base instanceof Num && exp instanceof Num)
 			return new Num(base.value ** exp.value);
