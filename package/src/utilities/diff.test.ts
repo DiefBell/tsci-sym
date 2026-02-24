@@ -10,6 +10,9 @@ import { Num } from "../Num";
 import { Pow } from "../Pow";
 import { Rational } from "../Rational";
 import { Sym } from "../Sym";
+import { Acos } from "../trig/Acos";
+import { Asin } from "../trig/Asin";
+import { Atan } from "../trig/Atan";
 import { Cos } from "../trig/Cos";
 import { Sin } from "../trig/Sin";
 import { Tan } from "../trig/Tan";
@@ -207,6 +210,62 @@ describe("diff — Tan", () => {
 		const inner = new Mul(new Num(2), x);
 		const result = diff(new Tan(inner), x);
 		const expected = new Mul(new Num(2), new Pow(new Cos(inner), new Num(-2)));
+		expect(result.key()).toBe(expected.simplify().key());
+	});
+});
+
+describe("diff — Asin", () => {
+	it("d/dx(asin(x)) = (1−x²)^(-1/2)", () => {
+		const result = diff(new Asin(x), x);
+		const expected = new Pow(
+			new Add(new Num(1), new Mul(new Num(-1), new Pow(x, new Num(2)))),
+			new Rational(-1, 2),
+		);
+		expect(result.key()).toBe(expected.simplify().key());
+	});
+
+	it("d/dx(asin(2x)) = 2·(1−4x²)^(-1/2)  (chain rule)", () => {
+		const inner = new Mul(new Num(2), x);
+		const result = diff(new Asin(inner), x);
+		const radical = new Pow(
+			new Add(new Num(1), new Mul(new Num(-1), new Pow(inner, new Num(2)))),
+			new Rational(-1, 2),
+		);
+		const expected = new Mul(new Num(2), radical);
+		expect(result.key()).toBe(expected.simplify().key());
+	});
+});
+
+describe("diff — Acos", () => {
+	it("d/dx(acos(x)) = -(1−x²)^(-1/2)", () => {
+		const result = diff(new Acos(x), x);
+		const expected = new Neg(
+			new Pow(
+				new Add(new Num(1), new Mul(new Num(-1), new Pow(x, new Num(2)))),
+				new Rational(-1, 2),
+			),
+		);
+		expect(result.key()).toBe(expected.simplify().key());
+	});
+});
+
+describe("diff — Atan", () => {
+	it("d/dx(atan(x)) = (1+x²)^(-1)", () => {
+		const result = diff(new Atan(x), x);
+		const expected = new Pow(
+			new Add(new Num(1), new Pow(x, new Num(2))),
+			new Num(-1),
+		);
+		expect(result.key()).toBe(expected.simplify().key());
+	});
+
+	it("d/dx(atan(3x)) = 3·(1+9x²)^(-1)  (chain rule)", () => {
+		const inner = new Mul(new Num(3), x);
+		const result = diff(new Atan(inner), x);
+		const expected = new Mul(
+			new Num(3),
+			new Pow(new Add(new Num(1), new Pow(inner, new Num(2))), new Num(-1)),
+		);
 		expect(result.key()).toBe(expected.simplify().key());
 	});
 });

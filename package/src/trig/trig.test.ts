@@ -5,6 +5,9 @@ import { Neg } from "../Neg";
 import { Num } from "../Num";
 import { Rational } from "../Rational";
 import { Sym } from "../Sym";
+import { Acos } from "./Acos";
+import { Asin } from "./Asin";
+import { Atan } from "./Atan";
 import { Cos } from "./Cos";
 import { Sin } from "./Sin";
 import { Tan } from "./Tan";
@@ -161,5 +164,116 @@ describe("Tan — odd function", () => {
 describe("Tan — symbolic stays symbolic", () => {
 	it("tan(x) stays as Tan(x)", () => {
 		expect(new Tan(x).simplify().key()).toBe(new Tan(x).key());
+	});
+});
+
+// ─── Asin ─────────────────────────────────────────────────────────────────────
+
+describe("Asin — numeric evaluation", () => {
+	it("asin(0) = 0", () => {
+		expect(new Asin(new Num(0)).simplify().key()).toBe(new Num(0).key());
+	});
+
+	it("asin(1) = π/2  (exact)", () => {
+		const result = new Asin(new Num(1)).simplify();
+		const expected = new Mul(new Rational(1, 2), Pi);
+		expect(result.key()).toBe(expected.simplify().key());
+	});
+
+	it("asin(-1) = -π/2  (exact)", () => {
+		const result = new Asin(new Num(-1)).simplify();
+		const expected = new Mul(new Rational(-1, 2), Pi);
+		expect(result.key()).toBe(expected.simplify().key());
+	});
+
+	it("asin(0.5) ≈ Math.asin(0.5)", () => {
+		expect(new Asin(new Num(0.5)).simplify().key()).toBe(
+			new Num(Math.asin(0.5)).key(),
+		);
+	});
+});
+
+describe("Asin — odd function", () => {
+	it("asin(-x) = -asin(x)", () => {
+		const result = new Asin(new Neg(x)).simplify();
+		const expected = new Neg(new Asin(x)).simplify();
+		expect(result.key()).toBe(expected.key());
+	});
+});
+
+describe("Asin — symbolic stays symbolic", () => {
+	it("asin(x) stays as Asin(x)", () => {
+		expect(new Asin(x).simplify().key()).toBe(new Asin(x).key());
+	});
+});
+
+// ─── Acos ─────────────────────────────────────────────────────────────────────
+
+describe("Acos — numeric evaluation", () => {
+	it("acos(1) = 0", () => {
+		expect(new Acos(new Num(1)).simplify().key()).toBe(new Num(0).key());
+	});
+
+	it("acos(0) = π/2  (exact)", () => {
+		const result = new Acos(new Num(0)).simplify();
+		const expected = new Mul(new Rational(1, 2), Pi);
+		expect(result.key()).toBe(expected.simplify().key());
+	});
+
+	it("acos(-1) = π  (exact)", () => {
+		const result = new Acos(new Num(-1)).simplify();
+		expect(result.key()).toBe(Pi.key());
+	});
+
+	it("acos(0.5) ≈ Math.acos(0.5)", () => {
+		expect(new Acos(new Num(0.5)).simplify().key()).toBe(
+			new Num(Math.acos(0.5)).key(),
+		);
+	});
+});
+
+describe("Acos — symbolic stays symbolic", () => {
+	it("acos(x) stays as Acos(x)", () => {
+		expect(new Acos(x).simplify().key()).toBe(new Acos(x).key());
+	});
+});
+
+// ─── Atan ─────────────────────────────────────────────────────────────────────
+
+describe("Atan — numeric evaluation", () => {
+	it("atan(0) = 0", () => {
+		expect(new Atan(new Num(0)).simplify().key()).toBe(new Num(0).key());
+	});
+
+	it("atan(1) = π/4  (exact)", () => {
+		const result = new Atan(new Num(1)).simplify();
+		const expected = new Mul(new Rational(1, 4), Pi);
+		expect(result.key()).toBe(expected.simplify().key());
+	});
+
+	it("atan(-1) = -π/4  (exact)", () => {
+		const result = new Atan(new Num(-1)).simplify();
+		const expected = new Mul(new Rational(-1, 4), Pi);
+		expect(result.key()).toBe(expected.simplify().key());
+	});
+
+	it("atan(2) ≈ Math.atan(2)", () => {
+		expect(new Atan(new Num(2)).simplify().key()).toBe(
+			new Num(Math.atan(2)).key(),
+		);
+	});
+});
+
+describe("Atan — odd function", () => {
+	it("atan(-x) = -atan(x)", () => {
+		const result = new Atan(new Neg(x)).simplify();
+		const expected = new Neg(new Atan(x)).simplify();
+		expect(result.key()).toBe(expected.key());
+	});
+});
+
+describe("Atan — symbolic stays symbolic", () => {
+	it("atan(x) stays as Atan(x)", () => {
+		expect(new Atan(x).simplify().key()).toBe(new Atan(x).key());
 	});
 });

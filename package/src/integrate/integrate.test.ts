@@ -9,6 +9,9 @@ import { Num } from "../Num";
 import { Pow } from "../Pow";
 import { Rational } from "../Rational";
 import { Sym } from "../Sym";
+import { Acos } from "../trig/Acos";
+import { Asin } from "../trig/Asin";
+import { Atan } from "../trig/Atan";
 import { Cos } from "../trig/Cos";
 import { Sin } from "../trig/Sin";
 import { Tan } from "../trig/Tan";
@@ -251,6 +254,57 @@ describe("integrate — tan rule", () => {
 	it("∫ tan(x) dx = -ln|cos(x)|", () => {
 		const result = integrate(new Tan(x), x);
 		const expected = new Neg(new Log(new Abs(new Cos(x))));
+		expect(result.key()).toBe(expected.simplify().key());
+	});
+});
+
+describe("integrate — asin rule", () => {
+	it("∫ asin(x) dx = x·asin(x) + √(1−x²)", () => {
+		const result = integrate(new Asin(x), x);
+		const radical = new Pow(
+			new Add(new Num(1), new Mul(new Num(-1), new Pow(x, new Num(2)))),
+			new Rational(1, 2),
+		);
+		const expected = new Add(new Mul(x, new Asin(x)), radical);
+		expect(result.key()).toBe(expected.simplify().key());
+	});
+});
+
+describe("integrate — acos rule", () => {
+	it("∫ acos(x) dx = x·acos(x) − √(1−x²)", () => {
+		const result = integrate(new Acos(x), x);
+		const radical = new Pow(
+			new Add(new Num(1), new Mul(new Num(-1), new Pow(x, new Num(2)))),
+			new Rational(1, 2),
+		);
+		const expected = new Add(new Mul(x, new Acos(x)), new Neg(radical));
+		expect(result.key()).toBe(expected.simplify().key());
+	});
+});
+
+describe("integrate — atan rule", () => {
+	it("∫ atan(x) dx = x·atan(x) − (1/2)·ln(1+x²)", () => {
+		const result = integrate(new Atan(x), x);
+		const logTerm = new Mul(
+			new Rational(1, 2),
+			new Log(new Add(new Num(1), new Pow(x, new Num(2)))),
+		);
+		const expected = new Add(new Mul(x, new Atan(x)), new Neg(logTerm));
+		expect(result.key()).toBe(expected.simplify().key());
+	});
+
+	it("∫ atan(2x) dx via u-sub", () => {
+		// u-sub: g=2x, g'=2; ∫ atan(u) du/2 = (1/2)[u·atan(u) − (1/2)ln(1+u²)]
+		const inner = new Mul(new Num(2), x);
+		const result = integrate(new Atan(inner), x);
+		const logTerm = new Mul(
+			new Rational(1, 2),
+			new Log(new Add(new Num(1), new Pow(inner, new Num(2)))),
+		);
+		const expected = new Mul(
+			new Rational(1, 2),
+			new Add(new Mul(inner, new Atan(inner)), new Neg(logTerm)),
+		);
 		expect(result.key()).toBe(expected.simplify().key());
 	});
 });

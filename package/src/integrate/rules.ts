@@ -9,6 +9,9 @@ import { Num } from "../Num";
 import { Pow } from "../Pow";
 import { Rational } from "../Rational";
 import { Sym } from "../Sym";
+import { Acos } from "../trig/Acos";
+import { Asin } from "../trig/Asin";
+import { Atan } from "../trig/Atan";
 import { Cos } from "../trig/Cos";
 import { Sin } from "../trig/Sin";
 import { Tan } from "../trig/Tan";
@@ -139,6 +142,39 @@ export const tanRule: Rule = (expr, sym) => {
 	return new Neg(new Log(new Abs(new Cos(sym)))).simplify();
 };
 
+/** ∫ asin(x) dx = x·asin(x) + √(1−x²)  (integration by parts) */
+export const asinRule: Rule = (expr, sym) => {
+	if (!(expr instanceof Asin)) return null;
+	if (expr.inner.key() !== sym.key()) return null;
+	const radical = new Pow(
+		new Add(new Num(1), new Mul(new Num(-1), new Pow(sym, new Num(2)))),
+		new Rational(1, 2),
+	);
+	return new Add(new Mul(sym, new Asin(sym)), radical).simplify();
+};
+
+/** ∫ acos(x) dx = x·acos(x) − √(1−x²)  (integration by parts) */
+export const acosRule: Rule = (expr, sym) => {
+	if (!(expr instanceof Acos)) return null;
+	if (expr.inner.key() !== sym.key()) return null;
+	const radical = new Pow(
+		new Add(new Num(1), new Mul(new Num(-1), new Pow(sym, new Num(2)))),
+		new Rational(1, 2),
+	);
+	return new Add(new Mul(sym, new Acos(sym)), new Neg(radical)).simplify();
+};
+
+/** ∫ atan(x) dx = x·atan(x) − (1/2)·ln(1+x²)  (integration by parts) */
+export const atanRule: Rule = (expr, sym) => {
+	if (!(expr instanceof Atan)) return null;
+	if (expr.inner.key() !== sym.key()) return null;
+	const logTerm = new Mul(
+		new Rational(1, 2),
+		new Log(new Add(new Num(1), new Pow(sym, new Num(2)))),
+	);
+	return new Add(new Mul(sym, new Atan(sym)), new Neg(logTerm)).simplify();
+};
+
 // ─── structural rules (recurse into sub-integrals) ───────────────────────────
 
 /** ∫ (f + g) dx = ∫f dx + ∫g dx */
@@ -232,5 +268,8 @@ export const RULES: Rule[] = [
 	sinRule,
 	cosRule,
 	tanRule,
+	asinRule,
+	acosRule,
+	atanRule,
 	uSubRule,
 ];

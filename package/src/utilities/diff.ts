@@ -10,6 +10,9 @@ import { Num } from "../Num";
 import { Pow } from "../Pow";
 import { Rational } from "../Rational";
 import { Sym } from "../Sym";
+import { Acos } from "../trig/Acos";
+import { Asin } from "../trig/Asin";
+import { Atan } from "../trig/Atan";
 import { Cos } from "../trig/Cos";
 import { Sin } from "../trig/Sin";
 import { Tan } from "../trig/Tan";
@@ -29,6 +32,9 @@ import { Tan } from "../trig/Tan";
  *   Sin  — d/dx(sin f)  = cos(f)·f'                  (chain rule)
  *   Cos  — d/dx(cos f)  = -sin(f)·f'                 (chain rule)
  *   Tan  — d/dx(tan f)  = f'/cos²(f)                 (chain rule)
+ *   Asin — d/dx(asin f) = f'/√(1−f²)
+ *   Acos — d/dx(acos f) = −f'/√(1−f²)
+ *   Atan — d/dx(atan f) = f'/(1+f²)
  */
 export function diff(expr: Expr, sym: Sym): Expr {
 	// --- atoms ---
@@ -138,6 +144,39 @@ export function diff(expr: Expr, sym: Sym): Expr {
 	if (expr instanceof Tan) {
 		const df = diff(expr.inner, sym);
 		return new Mul(new Pow(new Cos(expr.inner), new Num(-2)), df).simplify();
+	}
+
+	// --- Asin: d/dx[asin(f)] = f' / √(1 − f²) ---
+
+	if (expr instanceof Asin) {
+		const df = diff(expr.inner, sym);
+		const radical = new Pow(
+			new Add(new Num(1), new Mul(new Num(-1), new Pow(expr.inner, new Num(2)))),
+			new Rational(-1, 2),
+		);
+		return new Mul(df, radical).simplify();
+	}
+
+	// --- Acos: d/dx[acos(f)] = −f' / √(1 − f²) ---
+
+	if (expr instanceof Acos) {
+		const df = diff(expr.inner, sym);
+		const radical = new Pow(
+			new Add(new Num(1), new Mul(new Num(-1), new Pow(expr.inner, new Num(2)))),
+			new Rational(-1, 2),
+		);
+		return new Neg(new Mul(df, radical)).simplify();
+	}
+
+	// --- Atan: d/dx[atan(f)] = f' / (1 + f²) ---
+
+	if (expr instanceof Atan) {
+		const df = diff(expr.inner, sym);
+		const denom = new Pow(
+			new Add(new Num(1), new Pow(expr.inner, new Num(2))),
+			new Num(-1),
+		);
+		return new Mul(df, denom).simplify();
 	}
 
 	throw new Error(
