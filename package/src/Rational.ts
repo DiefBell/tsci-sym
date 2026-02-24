@@ -16,6 +16,8 @@ export class Rational extends Expr {
 	readonly denominator!: bigint;
 
 	constructor(numerator: number | bigint, denominator: number | bigint = 1) {
+		super();
+
 		let p = BigInt(numerator);
 		let q = BigInt(denominator);
 
@@ -32,9 +34,9 @@ export class Rational extends Expr {
 		q = q / g;
 
 		const cached = Rational.#cache.get(`${p},${q}`);
+		// biome-ignore lint/correctness/noConstructorReturn: we need caching
 		if (cached) return cached;
 
-		super();
 		this.numerator = p;
 		this.denominator = q;
 		Rational.#cache.set(`${p},${q}`, this);
