@@ -5,41 +5,52 @@ export abstract class Expr {
 	/** Structural identity key, distinct from display toString(). Used for comparing expression trees. */
 	abstract key(): string;
 
-	static readonly "+" = [
-		(lhs: Expr, rhs: Expr): Expr => new Expr.Add(lhs, rhs),
-		(lhs: Expr, rhs: number): Expr => new Expr.Add(lhs, new Expr.Num(rhs)),
-		(lhs: number, rhs: Expr): Expr => new Expr.Add(new Expr.Num(lhs), rhs),
-	] as const;
+	static "+"(lhs: Expr, rhs: Expr): Expr;
+	static "+"(lhs: Expr, rhs: number): Expr;
+	static "+"(lhs: number, rhs: Expr): Expr;
+	static "+"(lhs: Expr | number, rhs: Expr | number): Expr {
+		const l = typeof lhs === "number" ? new Expr.Num(lhs) : lhs;
+		const r = typeof rhs === "number" ? new Expr.Num(rhs) : rhs;
+		return new Expr.Add(l, r);
+	}
 
-	static readonly "*" = [
-		(lhs: Expr, rhs: Expr): Expr => new Expr.Mul(lhs, rhs),
-		(lhs: Expr, rhs: number): Expr => new Expr.Mul(lhs, new Expr.Num(rhs)),
-		(lhs: number, rhs: Expr): Expr => new Expr.Mul(new Expr.Num(lhs), rhs),
-	] as const;
+	static "*"(lhs: Expr, rhs: Expr): Expr;
+	static "*"(lhs: Expr, rhs: number): Expr;
+	static "*"(lhs: number, rhs: Expr): Expr;
+	static "*"(lhs: Expr | number, rhs: Expr | number): Expr {
+		const l = typeof lhs === "number" ? new Expr.Num(lhs) : lhs;
+		const r = typeof rhs === "number" ? new Expr.Num(rhs) : rhs;
+		return new Expr.Mul(l, r);
+	}
 
-	static readonly "-" = [
-		// unary
-		(inner: Expr): Expr => new Expr.Neg(inner),
+	static "-"(inner: Expr): Expr;
+	static "-"(lhs: Expr, rhs: Expr): Expr;
+	static "-"(lhs: Expr, rhs: number): Expr;
+	static "-"(lhs: number, rhs: Expr): Expr;
+	static "-"(lhs: Expr | number, rhs?: Expr | number): Expr {
+		if (rhs === undefined) return new Expr.Neg(lhs as Expr);
+		const l = typeof lhs === "number" ? new Expr.Num(lhs) : lhs;
+		const r = typeof rhs === "number" ? Expr["-"](new Expr.Num(rhs)) : Expr["-"](rhs);
+		return Expr["+"](l, r);
+	}
 
-		// binary
-		(lhs: Expr, rhs: Expr): Expr => new this.Add(lhs, Expr["-"][0](rhs)),
-		(lhs: Expr, rhs: number): Expr =>
-			new this.Add(lhs, Expr["-"][0](new Expr.Num(rhs))),
-		(lhs: number, rhs: Expr): Expr =>
-			new this.Add(new Expr.Num(lhs), Expr["-"][0](rhs)),
-	] as const;
+	static "/"(lhs: Expr, rhs: Expr): Expr;
+	static "/"(lhs: Expr, rhs: number): Expr;
+	static "/"(lhs: number, rhs: Expr): Expr;
+	static "/"(lhs: Expr | number, rhs: Expr | number): Expr {
+		const l = typeof lhs === "number" ? new Expr.Num(lhs) : lhs;
+		if (typeof rhs === "number") return new Expr.Mul(l, new Expr.Rational(1, rhs));
+		return new Expr.Mul(l, new Expr.Pow(rhs, new Expr.Num(-1)));
+	}
 
-	static readonly "/" = [
-		(lhs: Expr, rhs: Expr): Expr => new Expr.Mul(lhs, new Expr.Pow(rhs, new Expr.Num(-1))),
-		(lhs: Expr, rhs: number): Expr => new Expr.Mul(lhs, new Expr.Rational(1, rhs)),
-		(lhs: number, rhs: Expr): Expr => new Expr.Mul(new Expr.Num(lhs), new Expr.Pow(rhs, new Expr.Num(-1))),
-	] as const;
-
-	static readonly "**" = [
-		(lhs: Expr, rhs: Expr): Expr => new Expr.Pow(lhs, rhs),
-		(lhs: number, rhs: Expr): Expr => new Expr.Pow(new Expr.Num(lhs), rhs),
-		(lhs: Expr, rhs: number): Expr => new Expr.Pow(lhs, new Expr.Num(rhs)),
-	] as const;
+	static "**"(lhs: Expr, rhs: Expr): Expr;
+	static "**"(lhs: Expr, rhs: number): Expr;
+	static "**"(lhs: number, rhs: Expr): Expr;
+	static "**"(lhs: Expr | number, rhs: Expr | number): Expr {
+		const l = typeof lhs === "number" ? new Expr.Num(lhs) : lhs;
+		const r = typeof rhs === "number" ? new Expr.Num(rhs) : rhs;
+		return new Expr.Pow(l, r);
+	}
 
 	public declare static Add: new (
 		lhs: Expr,
