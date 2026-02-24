@@ -18,7 +18,19 @@ export class Neg extends Expr {
 	}
 
 	key() {
-		return `Neg(${this.inner.key()})`;
+		// Neg(x) is canonically Mul(-1, x) — produce the same key as Mul would
+		const factors: string[] = ["Num(-1)"];
+		function collect(expr: Expr): void {
+			if (expr instanceof Mul) {
+				collect(expr.left);
+				collect(expr.right);
+			} else {
+				factors.push(expr.key());
+			}
+		}
+		collect(this.inner);
+		factors.sort();
+		return `Mul[${factors.join(",")}]`;
 	}
 
 	simplify(): Expr {

@@ -12,7 +12,18 @@ export class Add extends Expr {
 	}
 
 	key() {
-		return `Add(${this.left.key()},${this.right.key()})`;
+		const terms: string[] = [];
+		function collect(expr: Expr) {
+			if (expr instanceof Add) {
+				collect(expr.left);
+				collect(expr.right);
+			} else {
+				terms.push(expr.key());
+			}
+		}
+		collect(this);
+		terms.sort();
+		return `Add[${terms.join(",")}]`;
 	}
 
 	toString() {

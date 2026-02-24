@@ -28,7 +28,18 @@ export class Mul extends Expr {
 	}
 
 	key() {
-		return `Mul(${this.left.key()},${this.right.key()})`;
+		const factors: string[] = [];
+		function collect(expr: Expr): void {
+			if (expr instanceof Mul) {
+				collect(expr.left);
+				collect(expr.right);
+			} else {
+				factors.push(expr.key());
+			}
+		}
+		collect(this);
+		factors.sort();
+		return `Mul[${factors.join(",")}]`;
 	}
 
 	toString() {
