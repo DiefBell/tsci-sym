@@ -133,7 +133,10 @@ export class Mul extends Expr {
 			return new Add(new Mul(l, r.left), new Mul(l, r.right)).simplify();
 		}
 
-		return this;
+		// Return a new Mul with simplified children so key() reflects them.
+		// (Returning `this` would preserve unsimplified left/right in the node.)
+		if (l === this.left && r === this.right) return this;
+		return new Mul(l, r);
 	}
 }
 
