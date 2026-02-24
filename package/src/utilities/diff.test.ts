@@ -10,6 +10,9 @@ import { Num } from "../Num";
 import { Pow } from "../Pow";
 import { Rational } from "../Rational";
 import { Sym } from "../Sym";
+import { Cos } from "../trig/Cos";
+import { Sin } from "../trig/Sin";
+import { Tan } from "../trig/Tan";
 import { diff } from "./diff";
 
 const x = new Sym("x");
@@ -154,6 +157,56 @@ describe("diff — chain rule via composition", () => {
 		const poly = new Add(new Add(new Pow(x, new Num(2)), new Mul(new Num(3), x)), new Num(1));
 		const result = diff(poly, x);
 		const expected = new Add(new Mul(new Num(2), x), new Num(3));
+		expect(result.key()).toBe(expected.simplify().key());
+	});
+});
+
+describe("diff — Sin", () => {
+	it("d/dx(sin(x)) = cos(x)", () => {
+		expect(diff(new Sin(x), x).key()).toBe(new Cos(x).key());
+	});
+
+	it("d/dx(sin(x²)) = cos(x²)·2x  (chain rule)", () => {
+		const x2 = new Pow(x, new Num(2));
+		const result = diff(new Sin(x2), x);
+		const expected = new Mul(new Cos(x2), new Mul(new Num(2), x));
+		expect(result.key()).toBe(expected.simplify().key());
+	});
+
+	it("d/dx(sin(3x)) = 3·cos(3x)", () => {
+		const inner = new Mul(new Num(3), x);
+		const result = diff(new Sin(inner), x);
+		const expected = new Mul(new Num(3), new Cos(inner));
+		expect(result.key()).toBe(expected.simplify().key());
+	});
+});
+
+describe("diff — Cos", () => {
+	it("d/dx(cos(x)) = -sin(x)", () => {
+		const result = diff(new Cos(x), x);
+		const expected = new Neg(new Sin(x));
+		expect(result.key()).toBe(expected.simplify().key());
+	});
+
+	it("d/dx(cos(x²)) = -sin(x²)·2x  (chain rule)", () => {
+		const x2 = new Pow(x, new Num(2));
+		const result = diff(new Cos(x2), x);
+		const expected = new Mul(new Neg(new Sin(x2)), new Mul(new Num(2), x));
+		expect(result.key()).toBe(expected.simplify().key());
+	});
+});
+
+describe("diff — Tan", () => {
+	it("d/dx(tan(x)) = cos(x)^(-2)", () => {
+		const result = diff(new Tan(x), x);
+		const expected = new Pow(new Cos(x), new Num(-2));
+		expect(result.key()).toBe(expected.simplify().key());
+	});
+
+	it("d/dx(tan(2x)) = 2·cos(2x)^(-2)  (chain rule)", () => {
+		const inner = new Mul(new Num(2), x);
+		const result = diff(new Tan(inner), x);
+		const expected = new Mul(new Num(2), new Pow(new Cos(inner), new Num(-2)));
 		expect(result.key()).toBe(expected.simplify().key());
 	});
 });

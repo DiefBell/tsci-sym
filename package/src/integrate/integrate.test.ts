@@ -1,4 +1,5 @@
 import { describe, expect, it } from "bun:test";
+import { Abs } from "../Abs";
 import { Add } from "../Add";
 import { E } from "../constants/E";
 import { Log } from "../Log";
@@ -8,6 +9,9 @@ import { Num } from "../Num";
 import { Pow } from "../Pow";
 import { Rational } from "../Rational";
 import { Sym } from "../Sym";
+import { Cos } from "../trig/Cos";
+import { Sin } from "../trig/Sin";
+import { Tan } from "../trig/Tan";
 import { integrate } from "./integrate";
 
 const x = new Sym("x");
@@ -195,6 +199,58 @@ describe("integrate — u-substitution", () => {
 			new Rational(1, 2),
 			new Pow(new Log(x), new Num(2)),
 		);
+		expect(result.key()).toBe(expected.simplify().key());
+	});
+});
+
+describe("integrate — sin rule", () => {
+	it("∫ sin(x) dx = -cos(x)", () => {
+		const result = integrate(new Sin(x), x);
+		const expected = new Neg(new Cos(x));
+		expect(result.key()).toBe(expected.simplify().key());
+	});
+
+	it("∫ sin(3x) dx = -(1/3)·cos(3x)  via u-sub", () => {
+		const inner = new Mul(new Num(3), x);
+		const result = integrate(new Sin(inner), x);
+		const expected = new Mul(new Rational(-1, 3), new Cos(inner));
+		expect(result.key()).toBe(expected.simplify().key());
+	});
+
+	it("∫ sin(x²)·2x dx = -cos(x²)  via u-sub", () => {
+		const x2 = new Pow(x, new Num(2));
+		const expr = new Mul(new Sin(x2), new Mul(new Num(2), x));
+		const result = integrate(expr, x);
+		const expected = new Neg(new Cos(x2));
+		expect(result.key()).toBe(expected.simplify().key());
+	});
+});
+
+describe("integrate — cos rule", () => {
+	it("∫ cos(x) dx = sin(x)", () => {
+		const result = integrate(new Cos(x), x);
+		expect(result.key()).toBe(new Sin(x).key());
+	});
+
+	it("∫ cos(3x) dx = (1/3)·sin(3x)  via u-sub", () => {
+		const inner = new Mul(new Num(3), x);
+		const result = integrate(new Cos(inner), x);
+		const expected = new Mul(new Rational(1, 3), new Sin(inner));
+		expect(result.key()).toBe(expected.simplify().key());
+	});
+
+	it("∫ cos(x²)·2x dx = sin(x²)  via u-sub", () => {
+		const x2 = new Pow(x, new Num(2));
+		const expr = new Mul(new Cos(x2), new Mul(new Num(2), x));
+		const result = integrate(expr, x);
+		expect(result.key()).toBe(new Sin(x2).simplify().key());
+	});
+});
+
+describe("integrate — tan rule", () => {
+	it("∫ tan(x) dx = -ln|cos(x)|", () => {
+		const result = integrate(new Tan(x), x);
+		const expected = new Neg(new Log(new Abs(new Cos(x))));
 		expect(result.key()).toBe(expected.simplify().key());
 	});
 });

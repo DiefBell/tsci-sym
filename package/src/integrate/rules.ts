@@ -1,3 +1,4 @@
+import { Abs } from "../Abs";
 import { Add } from "../Add";
 import { EulerNumber } from "../constants/E";
 import type { Expr } from "../Expr";
@@ -8,6 +9,9 @@ import { Num } from "../Num";
 import { Pow } from "../Pow";
 import { Rational } from "../Rational";
 import { Sym } from "../Sym";
+import { Cos } from "../trig/Cos";
+import { Sin } from "../trig/Sin";
+import { Tan } from "../trig/Tan";
 import { diff } from "../utilities/diff";
 import {
 	containsSym,
@@ -114,6 +118,27 @@ export const logRule: Rule = (expr, sym) => {
 	return new Add(new Mul(sym, new Log(sym)), new Neg(sym)).simplify();
 };
 
+/** ∫ sin(x) dx = -cos(x) */
+export const sinRule: Rule = (expr, sym) => {
+	if (!(expr instanceof Sin)) return null;
+	if (expr.inner.key() !== sym.key()) return null;
+	return new Neg(new Cos(sym)).simplify();
+};
+
+/** ∫ cos(x) dx = sin(x) */
+export const cosRule: Rule = (expr, sym) => {
+	if (!(expr instanceof Cos)) return null;
+	if (expr.inner.key() !== sym.key()) return null;
+	return new Sin(sym);
+};
+
+/** ∫ tan(x) dx = -ln|cos(x)| */
+export const tanRule: Rule = (expr, sym) => {
+	if (!(expr instanceof Tan)) return null;
+	if (expr.inner.key() !== sym.key()) return null;
+	return new Neg(new Log(new Abs(new Cos(sym)))).simplify();
+};
+
 // ─── structural rules (recurse into sub-integrals) ───────────────────────────
 
 /** ∫ (f + g) dx = ∫f dx + ∫g dx */
@@ -204,5 +229,8 @@ export const RULES: Rule[] = [
 	expRule,
 	expBaseRule,
 	logRule,
+	sinRule,
+	cosRule,
+	tanRule,
 	uSubRule,
 ];

@@ -10,6 +10,9 @@ import { Num } from "../Num";
 import { Pow } from "../Pow";
 import { Rational } from "../Rational";
 import { Sym } from "../Sym";
+import { Cos } from "../trig/Cos";
+import { Sin } from "../trig/Sin";
+import { Tan } from "../trig/Tan";
 
 export function isNumericCoeff(e: Expr): e is Num | Rational {
 	return e instanceof Num || e instanceof Rational;
@@ -31,6 +34,8 @@ export function containsSym(expr: Expr, sym: Sym): boolean {
 	if (expr instanceof Pow)
 		return containsSym(expr.base, sym) || containsSym(expr.exponent, sym);
 	if (expr instanceof Neg || expr instanceof Log || expr instanceof Abs)
+		return containsSym(expr.inner, sym);
+	if (expr instanceof Sin || expr instanceof Cos || expr instanceof Tan)
 		return containsSym(expr.inner, sym);
 	return false;
 }
@@ -56,6 +61,9 @@ export function substitute(expr: Expr, from: Expr, to: Expr): Expr {
 	if (expr instanceof Neg) return new Neg(substitute(expr.inner, from, to));
 	if (expr instanceof Log) return new Log(substitute(expr.inner, from, to));
 	if (expr instanceof Abs) return new Abs(substitute(expr.inner, from, to));
+	if (expr instanceof Sin) return new Sin(substitute(expr.inner, from, to));
+	if (expr instanceof Cos) return new Cos(substitute(expr.inner, from, to));
+	if (expr instanceof Tan) return new Tan(substitute(expr.inner, from, to));
 	return expr;
 }
 
@@ -116,6 +124,10 @@ export function innerComposites(expr: Expr, sym: Sym): Expr[] {
 			visit(e.base);
 			visit(e.exponent);
 		} else if (e instanceof Log || e instanceof Abs) {
+			addCandidate(e);
+			addCandidate(e.inner);
+			visit(e.inner);
+		} else if (e instanceof Sin || e instanceof Cos || e instanceof Tan) {
 			addCandidate(e);
 			addCandidate(e.inner);
 			visit(e.inner);

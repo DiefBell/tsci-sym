@@ -18,3 +18,6 @@ export * as util from "./utilities";
 
 export * from "./integrate";
 export * as integrate from "./integrate";
+
+export * from "./trig";
+export * as trig from "./trig";

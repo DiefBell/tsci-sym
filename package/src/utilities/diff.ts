@@ -10,6 +10,9 @@ import { Num } from "../Num";
 import { Pow } from "../Pow";
 import { Rational } from "../Rational";
 import { Sym } from "../Sym";
+import { Cos } from "../trig/Cos";
+import { Sin } from "../trig/Sin";
+import { Tan } from "../trig/Tan";
 
 /**
  * Symbolically differentiates `expr` with respect to `sym`.
@@ -23,6 +26,9 @@ import { Sym } from "../Sym";
  *          d/dx(f^g)    = g·f^(g-1)·f' + f^g·g'·ln(f) (general)
  *   Log  — d/dx(ln f)   = f'/f                        (chain rule)
  *   Abs  — d/dx(|f|)    = (f/|f|)·f'
+ *   Sin  — d/dx(sin f)  = cos(f)·f'                  (chain rule)
+ *   Cos  — d/dx(cos f)  = -sin(f)·f'                 (chain rule)
+ *   Tan  — d/dx(tan f)  = f'/cos²(f)                 (chain rule)
  */
 export function diff(expr: Expr, sym: Sym): Expr {
 	// --- atoms ---
@@ -111,6 +117,27 @@ export function diff(expr: Expr, sym: Sym): Expr {
 			new Mul(expr.inner, new Pow(expr, new Num(-1))),
 			df,
 		).simplify();
+	}
+
+	// --- Sin: d/dx[sin(f)] = cos(f)·f' ---
+
+	if (expr instanceof Sin) {
+		const df = diff(expr.inner, sym);
+		return new Mul(new Cos(expr.inner), df).simplify();
+	}
+
+	// --- Cos: d/dx[cos(f)] = -sin(f)·f' ---
+
+	if (expr instanceof Cos) {
+		const df = diff(expr.inner, sym);
+		return new Mul(new Neg(new Sin(expr.inner)), df).simplify();
+	}
+
+	// --- Tan: d/dx[tan(f)] = f' / cos²(f) ---
+
+	if (expr instanceof Tan) {
+		const df = diff(expr.inner, sym);
+		return new Mul(new Pow(new Cos(expr.inner), new Num(-2)), df).simplify();
 	}
 
 	throw new Error(
