@@ -1,5 +1,6 @@
 {
 	"include": ["src"],
+	"exclude": ["src/**/*.test.ts"],
 	"compilerOptions": {
 		// Environment setup & latest features
 		"lib": ["ESNext"],

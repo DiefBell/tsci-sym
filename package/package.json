@@ -15,7 +15,8 @@
 		"build": "tsc && bun run validate",
 		"watch": "tsc -w",
 		"validate": "boperate validate",
-		"typecheck": "tsc --no-emit"
+		"typecheck": "tsc --no-emit",
+		"test": "bun test"
 	},
 	"peerDependencies": {
 		"typescript": "^5",
