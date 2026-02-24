@@ -1,4 +1,5 @@
 import { Expr } from "./Expr";
+import { Mul } from "./Mul";
 import { Num } from "./Num";
 import { Rational } from "./Rational";
 
@@ -42,6 +43,21 @@ export class Pow extends Expr {
 
 		// x^1 = x
 		if (exp instanceof Num && exp.value === 1) return base;
+
+		// (f^a)^b = f^(a*b) — safe when both exponents are integers
+		// (excludes fractional exponents to avoid sqrt(x^2) = x errors on negative x)
+		if (
+			base instanceof Pow &&
+			exp instanceof Num &&
+			Number.isInteger(exp.value) &&
+			base.exponent instanceof Num &&
+			Number.isInteger(base.exponent.value)
+		) {
+			return new Pow(
+				base.base,
+				new Mul(base.exponent, exp).simplify(),
+			).simplify();
+		}
 
 		// integer^(-1) → exact Rational reciprocal (before float folding)
 		if (

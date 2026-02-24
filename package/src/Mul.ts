@@ -81,17 +81,17 @@ export class Mul extends Expr {
 			return new Mul(r, l);
 		}
 
-		// e * e → e^2, and power combination rules
-		if (l.key() === r.key()) return new Pow(l, new Num(2));
+		// e * e → e^2, and power combination rules (guard: numeric * numeric handled below)
+		if (!isCoeff(l) && l.key() === r.key()) return new Pow(l, new Num(2));
 
 		if (l instanceof Pow && l.base.key() === r.key())
-			return new Pow(l.base, new Add(l.exponent, new Num(1)));
+			return new Pow(l.base, new Add(l.exponent, new Num(1)).simplify()).simplify();
 
 		if (r instanceof Pow && r.base.key() === l.key())
-			return new Pow(l, new Add(r.exponent, new Num(1)));
+			return new Pow(l, new Add(r.exponent, new Num(1)).simplify()).simplify();
 
 		if (l instanceof Pow && r instanceof Pow && l.base.key() === r.base.key())
-			return new Pow(l.base, new Add(l.exponent, r.exponent));
+			return new Pow(l.base, new Add(l.exponent, r.exponent).simplify()).simplify();
 
 		if (
 			(l instanceof Num && l.value === 0) ||

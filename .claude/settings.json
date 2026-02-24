@@ -1,11 +1,11 @@
 {
-  "permissions": {
-    "allow": [
-      "mcp__mcp-openmemory__recall_memory_abstract",
-      "mcp__mcp-openmemory__save_memory",
-      "mcp__boperators__list_overloads",
-      "mcp__boperators__scaffold_overloads",
-      "Bash(bun test)"
-    ]
-  }
+	"permissions": {
+		"allow": [
+			"mcp__mcp-openmemory__recall_memory_abstract",
+			"mcp__mcp-openmemory__save_memory",
+			"mcp__boperators__list_overloads",
+			"mcp__boperators__scaffold_overloads",
+			"Bash(bun test:*)"
+		]
+	}
 }
