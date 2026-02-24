@@ -15,3 +15,6 @@ export * as constants from "./constants";
 
 export * from "./utilities";
 export * as util from "./utilities";
+
+export * from "./integrate";
+export * as integrate from "./integrate";
