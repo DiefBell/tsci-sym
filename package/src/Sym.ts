@@ -4,9 +4,10 @@ export class Sym extends Expr<readonly []> {
 	static readonly #cache = new Map<string, Sym>();
 
 	constructor(public readonly name: string) {
-		const cached = Sym.#cache.get(name);
-		if (cached) return cached;
 		super();
+		const cached = Sym.#cache.get(name);
+		// biome-ignore lint/correctness/noConstructorReturn: We want caching
+		if (cached) return cached;
 		Sym.#cache.set(name, this);
 	}
 
@@ -23,6 +24,11 @@ export class Sym extends Expr<readonly []> {
 	}
 	map(_fn: (e: Expr) => Expr): Expr {
 		return this;
+	}
+
+	/** A symbol is its own free variable. */
+	override freeSymbols(): Set<Sym> {
+		return new Set([this]);
 	}
 
 	simplify(): Expr {

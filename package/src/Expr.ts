@@ -1,3 +1,6 @@
+// `import type` breaks the circular dep: Sym imports Expr (value), Expr imports Sym (type only).
+import type { Sym } from "./Sym";
+
 export abstract class Expr<
 	// biome-ignore lint/suspicious/noExplicitAny: <>
 	TArgs extends readonly Expr[] = readonly Expr<any>[],
@@ -13,6 +16,28 @@ export abstract class Expr<
 
 	/** Return a new node of the same type with each child replaced by `fn(child)`. Atoms return `this`. */
 	abstract map(fn: (e: Expr) => Expr): Expr;
+
+	/**
+	 * Returns the set of all free symbolic variables (`Sym` nodes) anywhere in this expression tree.
+	 *
+	 * This is a concrete method — subclasses do NOT need to override it.
+	 * It works by recursively collecting `freeSymbols()` from each child via `args`.
+	 *
+	 * The one exception is `Sym` itself, which overrides this to return `new Set([this])`,
+	 * since a symbol is its own free variable and has no children to recurse into.
+	 *
+	 * All other atoms (Num, Rational, Pi, E) have `args = []`, so the loop never
+	 * runs and they return an empty set automatically — no override needed.
+	 */
+	freeSymbols(): Set<Sym> {
+		const result = new Set<Sym>();
+		for (const child of this.args) {
+			for (const sym of child.freeSymbols()) {
+				result.add(sym);
+			}
+		}
+		return result;
+	}
 
 	static "+"(lhs: Expr, rhs: Expr): Expr;
 	static "+"(lhs: Expr, rhs: number): Expr;
