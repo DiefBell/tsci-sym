@@ -1,23 +1,25 @@
 {
 	"name": "@sym.js/example",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"dev": "vite",
+		"build": "vite build",
+		"preview": "vite preview"
+	},
 	"dependencies": {
-		"sym.js": "link:sym.js"
+		"react": "^18.3.1",
+		"react-dom": "^18.3.1",
+		"sym.js": "workspace:*"
 	},
 	"devDependencies": {
-		"@boperators/cli": "^0.1.0",
-		"@boperators/plugin-bun": "^0.1.0",
-		"@boperators/plugin-ts-language-server": "^0.1.0",
-		"@boperators/plugin-tsc": "^0.1.0",
-		"@types/bun": "^1.1.16",
-		"boperators": "^0.1.0",
-		"ts-patch": "^3.3.0",
-		"typescript": "^5.9.3"
-	},
-	"scripts": {
-		"start": "bun run ./src/index.ts",
-		"transform": "rm -rf ./transformed && boperate compile --ts-out ./transformed --maps-out ./transformed",
-		"start:transformed": "bun run ./transformed/index.ts",
-		"build": "tspc",
-		"start:built": "node ./dist/index.ts"
+		"@boperators/plugin-ts-language-server": "0.3.1",
+		"@boperators/plugin-vite": "0.3.1",
+		"@types/react": "^18.3.1",
+		"@types/react-dom": "^18.3.1",
+		"@vitejs/plugin-react": "^4.3.4",
+		"boperators": "0.3.1",
+		"typescript": "^5",
+		"vite": "^6.0.0"
 	}
 }

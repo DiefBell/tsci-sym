@@ -28,7 +28,8 @@
 		"rules": {
 			"recommended": true,
 			"suspicious": {
-				"noDoubleEquals": "off"
+				"noDoubleEquals": "off",
+				"noArrayIndexKey": "warn"
 			}
 		}
 	},

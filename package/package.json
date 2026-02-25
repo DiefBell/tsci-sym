@@ -8,9 +8,6 @@
 		"dist"
 	],
 	"scripts": {
-		"check": "biome check .",
-		"check:unsafe": "biome check --write --unsafe .",
-		"format": "biome check --write --no-errors-on-unmatched .",
 		"build": "tsc && bun run validate",
 		"watch": "tsc -w",
 		"validate": "boperate validate",

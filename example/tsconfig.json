@@ -1,34 +1,23 @@
 {
-	"include": ["src"],
+	"include": ["src", "vite.config.ts"],
 	"compilerOptions": {
-		// Environment setup & latest features
-		"lib": ["ESNext"],
+		"lib": ["ESNext", "DOM", "DOM.Iterable"],
 		"target": "ESNext",
-		"module": "Preserve",
+		"module": "ESNext",
 		"moduleDetection": "force",
-		// Bundler mode
 		"moduleResolution": "bundler",
 		"allowImportingTsExtensions": true,
 		"verbatimModuleSyntax": true,
 		"noEmit": true,
-		// Best practices
+		"jsx": "react-jsx",
 		"strict": true,
 		"skipLibCheck": true,
 		"noFallthroughCasesInSwitch": true,
 		"noUncheckedIndexedAccess": true,
 		"noImplicitOverride": true,
-		// Some stricter flags (disabled by default)
-		"noUnusedLocals": false,
-		"noUnusedParameters": false,
-		"noPropertyAccessFromIndexSignature": false,
-		// Language server plugin"
 		"plugins": [
 			{
 				"name": "@boperators/plugin-ts-language-server"
-			},
-			{
-				"transform": "@boperators/plugin-tsc",
-				"transformProgram": true
 			}
 		]
 	}

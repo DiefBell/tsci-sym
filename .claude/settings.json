@@ -1,12 +1,15 @@
 {
-  "permissions": {
-    "allow": [
-      "mcp__mcp-openmemory__recall_memory_abstract",
-      "mcp__mcp-openmemory__save_memory",
-      "mcp__boperators__list_overloads",
-      "mcp__boperators__scaffold_overloads",
-      "Bash(bun test:*)",
-      "mcp__mcp-openmemory__update_memory_abstract"
-    ]
-  }
+	"permissions": {
+		"allow": [
+			"mcp__mcp-openmemory__recall_memory_abstract",
+			"mcp__mcp-openmemory__save_memory",
+			"mcp__boperators__list_overloads",
+			"mcp__boperators__scaffold_overloads",
+			"Bash(bun test:*)",
+			"mcp__mcp-openmemory__update_memory_abstract"
+		],
+		"additionalDirectories": [
+			"C:\\Users\\Dief\\Documents\\Source\\sym-js\\example"
+		]
+	}
 }

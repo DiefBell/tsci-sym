@@ -1,13 +1,15 @@
 {
 	"workspaces": [
-		"package"
+		"package",
+		"example"
 	],
 	"scripts": {
 		"build": "bun run --filter='*' build",
 		"watch": "bun run --filter='*' watch",
 		"typecheck": "bun run --filter='*' typecheck",
-		"check": "bun run --filter='*' check",
-		"format": "bun run --filter='*' format",
+		"check": "biome check .",
+		"check:unsafe": "biome check --write --unsafe .",
+		"format": "biome check --write --no-errors-on-unmatched .",
 		"prepare": "husky"
 	},
 	"devDependencies": {
