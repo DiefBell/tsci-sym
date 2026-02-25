@@ -4,9 +4,16 @@ import { Num } from "./Num";
 import { Pow } from "./Pow";
 
 /** Natural logarithm (base e). log(E) = 1, log(1) = 0, log(e^x) = x */
-export class Log extends Expr {
+export class Log extends Expr<readonly [Expr]> {
 	constructor(public readonly inner: Expr) {
 		super();
+	}
+
+	get args(): readonly [Expr] {
+		return [this.inner];
+	}
+	map(fn: (e: Expr) => Expr): Expr {
+		return new Log(fn(this.inner));
 	}
 
 	key() {

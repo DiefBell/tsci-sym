@@ -3,12 +3,19 @@ import { Mul } from "./Mul";
 import { Neg } from "./Neg";
 import { Num } from "./Num";
 
-export class Add extends Expr {
+export class Add extends Expr<readonly [Expr, Expr]> {
 	constructor(
 		public left: Expr,
 		public right: Expr,
 	) {
 		super();
+	}
+
+	get args(): readonly [Expr, Expr] {
+		return [this.left, this.right];
+	}
+	map(fn: (e: Expr) => Expr): Expr {
+		return new Add(fn(this.left), fn(this.right));
 	}
 
 	key() {

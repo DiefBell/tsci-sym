@@ -3,12 +3,19 @@ import { Mul } from "./Mul";
 import { Num } from "./Num";
 import { Rational } from "./Rational";
 
-export class Pow extends Expr {
+export class Pow extends Expr<readonly [Expr, Expr]> {
 	constructor(
 		public base: Expr,
 		public exponent: Expr,
 	) {
 		super();
+	}
+
+	get args(): readonly [Expr, Expr] {
+		return [this.base, this.exponent];
+	}
+	map(fn: (e: Expr) => Expr): Expr {
+		return new Pow(fn(this.base), fn(this.exponent));
 	}
 
 	key() {

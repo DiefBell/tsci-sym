@@ -1,6 +1,6 @@
 import { Expr } from "../Expr";
 
-export class PiConstant extends Expr {
+export class PiConstant extends Expr<readonly []> {
 	// TODO: do this how SymPy does it
 	/** 50 significant decimal places of π */
 	static readonly digits =
@@ -12,6 +12,13 @@ export class PiConstant extends Expr {
 	}
 	static get instance(): PiConstant {
 		return PiConstant._instance;
+	}
+
+	get args(): readonly [] {
+		return [];
+	}
+	map(_fn: (e: Expr) => Expr): Expr {
+		return this;
 	}
 
 	key() {

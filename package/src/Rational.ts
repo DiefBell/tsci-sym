@@ -9,7 +9,7 @@ function gcd(a: bigint, b: bigint): bigint {
 	return a;
 }
 
-export class Rational extends Expr {
+export class Rational extends Expr<readonly []> {
 	static readonly #cache = new Map<string, Rational>();
 
 	readonly numerator!: bigint;
@@ -49,6 +49,13 @@ export class Rational extends Expr {
 
 	key() {
 		return `Rational(${this.numerator},${this.denominator})`;
+	}
+
+	get args(): readonly [] {
+		return [];
+	}
+	map(_fn: (e: Expr) => Expr): Expr {
+		return this;
 	}
 
 	simplify(): Expr {

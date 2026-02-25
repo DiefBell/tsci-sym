@@ -16,9 +16,16 @@ import { isNegated, stripNeg } from "./utils";
  *   asin(Num n)   → Num(Math.asin(n))  for other numeric inputs
  *   asin(-u)      → -asin(u)           odd function
  */
-export class Asin extends Expr {
+export class Asin extends Expr<readonly [Expr]> {
 	constructor(public readonly inner: Expr) {
 		super();
+	}
+
+	get args(): readonly [Expr] {
+		return [this.inner];
+	}
+	map(fn: (e: Expr) => Expr): Expr {
+		return new Asin(fn(this.inner));
 	}
 
 	key() {
@@ -34,8 +41,10 @@ export class Asin extends Expr {
 
 		if (inner instanceof Num) {
 			if (inner.value === 0) return new Num(0);
-			if (inner.value === 1) return new Mul(new Rational(1, 2), PiConstant.instance);
-			if (inner.value === -1) return new Mul(new Rational(-1, 2), PiConstant.instance);
+			if (inner.value === 1)
+				return new Mul(new Rational(1, 2), PiConstant.instance);
+			if (inner.value === -1)
+				return new Mul(new Rational(-1, 2), PiConstant.instance);
 			return new Num(Math.asin(inner.value));
 		}
 

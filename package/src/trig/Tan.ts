@@ -11,9 +11,16 @@ import { isNegated, piCoeff, stripNeg } from "./utils";
  *   tan(nπ)       → 0                   integer n (periodicity)
  *   tan(-u)       → -tan(u)             odd function
  */
-export class Tan extends Expr {
+export class Tan extends Expr<readonly [Expr]> {
 	constructor(public readonly inner: Expr) {
 		super();
+	}
+
+	get args(): readonly [Expr] {
+		return [this.inner];
+	}
+	map(fn: (e: Expr) => Expr): Expr {
+		return new Tan(fn(this.inner));
 	}
 
 	key() {

@@ -1,9 +1,18 @@
-export abstract class Expr {
+export abstract class Expr<
+	// biome-ignore lint/suspicious/noExplicitAny: <>
+	TArgs extends readonly Expr[] = readonly Expr<any>[],
+> {
 	abstract simplify(): Expr;
 	abstract toString(): string;
 
 	/** Structural identity key, distinct from display toString(). Used for comparing expression trees. */
 	abstract key(): string;
+
+	/** Ordered tuple of child expressions. Atoms return `[]`. */
+	abstract get args(): TArgs;
+
+	/** Return a new node of the same type with each child replaced by `fn(child)`. Atoms return `this`. */
+	abstract map(fn: (e: Expr) => Expr): Expr;
 
 	static "+"(lhs: Expr, rhs: Expr): Expr;
 	static "+"(lhs: Expr, rhs: number): Expr;
@@ -30,7 +39,8 @@ export abstract class Expr {
 	static "-"(lhs: Expr | number, rhs?: Expr | number): Expr {
 		if (rhs === undefined) return new Expr.Neg(lhs as Expr);
 		const l = typeof lhs === "number" ? new Expr.Num(lhs) : lhs;
-		const r = typeof rhs === "number" ? Expr["-"](new Expr.Num(rhs)) : Expr["-"](rhs);
+		const r =
+			typeof rhs === "number" ? Expr["-"](new Expr.Num(rhs)) : Expr["-"](rhs);
 		return Expr["+"](l, r);
 	}
 
@@ -39,7 +49,8 @@ export abstract class Expr {
 	static "/"(lhs: number, rhs: Expr): Expr;
 	static "/"(lhs: Expr | number, rhs: Expr | number): Expr {
 		const l = typeof lhs === "number" ? new Expr.Num(lhs) : lhs;
-		if (typeof rhs === "number") return new Expr.Mul(l, new Expr.Rational(1, rhs));
+		if (typeof rhs === "number")
+			return new Expr.Mul(l, new Expr.Rational(1, rhs));
 		return new Expr.Mul(l, new Expr.Pow(rhs, new Expr.Num(-1)));
 	}
 

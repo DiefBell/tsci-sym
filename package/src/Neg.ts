@@ -8,9 +8,16 @@ import { Num } from "./Num";
  * @example `1 + -3 = -2`
  * @example `vec1 + -vec2 = vec1 - vec2`
  */
-export class Neg extends Expr {
+export class Neg extends Expr<readonly [Expr]> {
 	constructor(public inner: Expr) {
 		super();
+	}
+
+	get args(): readonly [Expr] {
+		return [this.inner];
+	}
+	map(fn: (e: Expr) => Expr): Expr {
+		return new Neg(fn(this.inner));
 	}
 
 	toString() {

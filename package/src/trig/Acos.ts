@@ -16,9 +16,16 @@ import { Rational } from "../Rational";
  * Note: acos is neither odd nor even (acos(-x) = π − acos(x)),
  * so no simple sign-stripping rule applies.
  */
-export class Acos extends Expr {
+export class Acos extends Expr<readonly [Expr]> {
 	constructor(public readonly inner: Expr) {
 		super();
+	}
+
+	get args(): readonly [Expr] {
+		return [this.inner];
+	}
+	map(fn: (e: Expr) => Expr): Expr {
+		return new Acos(fn(this.inner));
 	}
 
 	key() {
@@ -34,7 +41,8 @@ export class Acos extends Expr {
 
 		if (inner instanceof Num) {
 			if (inner.value === 1) return new Num(0);
-			if (inner.value === 0) return new Mul(new Rational(1, 2), PiConstant.instance);
+			if (inner.value === 0)
+				return new Mul(new Rational(1, 2), PiConstant.instance);
 			if (inner.value === -1) return PiConstant.instance;
 			return new Num(Math.acos(inner.value));
 		}

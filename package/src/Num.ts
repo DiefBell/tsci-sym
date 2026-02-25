@@ -1,6 +1,6 @@
 import { Expr } from "./Expr";
 
-export class Num extends Expr {
+export class Num extends Expr<readonly []> {
 	static readonly #cache = new Map<number, Num>();
 
 	constructor(public readonly value: number) {
@@ -16,6 +16,13 @@ export class Num extends Expr {
 
 	key() {
 		return `Num(${this.value})`;
+	}
+
+	get args(): readonly [] {
+		return [];
+	}
+	map(_fn: (e: Expr) => Expr): Expr {
+		return this;
 	}
 
 	simplify(): Expr {

@@ -1,6 +1,6 @@
 import { Expr } from "../Expr";
 
-export class EulerNumber extends Expr {
+export class EulerNumber extends Expr<readonly []> {
 	// TODO: do this how SymPy does it
 	/** 50 significant decimal places of e */
 	static readonly digits =
@@ -12,6 +12,13 @@ export class EulerNumber extends Expr {
 	}
 	static get instance(): EulerNumber {
 		return EulerNumber._instance;
+	}
+
+	get args(): readonly [] {
+		return [];
+	}
+	map(_fn: (e: Expr) => Expr): Expr {
+		return this;
 	}
 
 	key() {

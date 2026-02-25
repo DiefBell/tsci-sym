@@ -19,12 +19,19 @@ function mulCoeffs(a: Num | Rational, b: Num | Rational): Num | Rational {
 	return result.denominator === 1n ? new Num(Number(result.numerator)) : result;
 }
 
-export class Mul extends Expr {
+export class Mul extends Expr<readonly [Expr, Expr]> {
 	constructor(
 		public left: Expr,
 		public right: Expr,
 	) {
 		super();
+	}
+
+	get args(): readonly [Expr, Expr] {
+		return [this.left, this.right];
+	}
+	map(fn: (e: Expr) => Expr): Expr {
+		return new Mul(fn(this.left), fn(this.right));
 	}
 
 	key() {
@@ -44,7 +51,8 @@ export class Mul extends Expr {
 
 	toString() {
 		if (isCoeff(this.left) && !isCoeff(this.right)) {
-			if (this.left instanceof Num && this.left.value === -1) return `-${this.right}`;
+			if (this.left instanceof Num && this.left.value === -1)
+				return `-${this.right}`;
 			return `${this.left}${this.right}`;
 		}
 		if (isCoeff(this.right) && !isCoeff(this.left)) {
@@ -85,13 +93,19 @@ export class Mul extends Expr {
 		if (!isCoeff(l) && l.key() === r.key()) return new Pow(l, new Num(2));
 
 		if (l instanceof Pow && l.base.key() === r.key())
-			return new Pow(l.base, new Add(l.exponent, new Num(1)).simplify()).simplify();
+			return new Pow(
+				l.base,
+				new Add(l.exponent, new Num(1)).simplify(),
+			).simplify();
 
 		if (r instanceof Pow && r.base.key() === l.key())
 			return new Pow(l, new Add(r.exponent, new Num(1)).simplify()).simplify();
 
 		if (l instanceof Pow && r instanceof Pow && l.base.key() === r.base.key())
-			return new Pow(l.base, new Add(l.exponent, r.exponent).simplify()).simplify();
+			return new Pow(
+				l.base,
+				new Add(l.exponent, r.exponent).simplify(),
+			).simplify();
 
 		if (
 			(l instanceof Num && l.value === 0) ||
@@ -102,8 +116,10 @@ export class Mul extends Expr {
 		// multiply by 1
 		if (l instanceof Num && l.value === 1) return r;
 		if (r instanceof Num && r.value === 1) return l;
-		if (l instanceof Rational && l.numerator === 1n && l.denominator === 1n) return r;
-		if (r instanceof Rational && r.numerator === 1n && r.denominator === 1n) return l;
+		if (l instanceof Rational && l.numerator === 1n && l.denominator === 1n)
+			return r;
+		if (r instanceof Rational && r.numerator === 1n && r.denominator === 1n)
+			return l;
 
 		// coefficient * coefficient folding
 		if (isCoeff(l) && isCoeff(r)) return mulCoeffs(l, r);

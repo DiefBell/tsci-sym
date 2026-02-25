@@ -13,9 +13,16 @@ import { isNegated, piCoeff, stripNeg } from "./utils";
  *   sin(3π/2 + 2kπ)   → -1
  *   sin(-u)            → -sin(u)                 odd function
  */
-export class Sin extends Expr {
+export class Sin extends Expr<readonly [Expr]> {
 	constructor(public readonly inner: Expr) {
 		super();
+	}
+
+	get args(): readonly [Expr] {
+		return [this.inner];
+	}
+	map(fn: (e: Expr) => Expr): Expr {
+		return new Sin(fn(this.inner));
 	}
 
 	key() {

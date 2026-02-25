@@ -12,9 +12,16 @@ import { isNegated, piCoeff, stripNeg } from "./utils";
  *   cos(π/2 + kπ)      → 0                       half-integer multiples
  *   cos(-u)            → cos(u)                  even function
  */
-export class Cos extends Expr {
+export class Cos extends Expr<readonly [Expr]> {
 	constructor(public readonly inner: Expr) {
 		super();
+	}
+
+	get args(): readonly [Expr] {
+		return [this.inner];
+	}
+	map(fn: (e: Expr) => Expr): Expr {
+		return new Cos(fn(this.inner));
 	}
 
 	key() {
@@ -46,7 +53,7 @@ export class Cos extends Expr {
 				const halfPis = (num * 2n) / den;
 				const mod4 = ((halfPis % 4n) + 4n) % 4n;
 				if (mod4 === 1n || mod4 === 3n) return new Num(0); // cos(π/2), cos(3π/2)
-				if (mod4 === 0n) return new Num(1);  // cos(0)
+				if (mod4 === 0n) return new Num(1); // cos(0)
 				if (mod4 === 2n) return new Num(-1); // cos(π)
 			}
 		}

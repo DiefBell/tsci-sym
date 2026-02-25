@@ -1,6 +1,6 @@
 import { Expr } from "./Expr";
 
-export class Sym extends Expr {
+export class Sym extends Expr<readonly []> {
 	static readonly #cache = new Map<string, Sym>();
 
 	constructor(public readonly name: string) {
@@ -16,6 +16,13 @@ export class Sym extends Expr {
 
 	key() {
 		return `Sym(${this.name})`;
+	}
+
+	get args(): readonly [] {
+		return [];
+	}
+	map(_fn: (e: Expr) => Expr): Expr {
+		return this;
 	}
 
 	simplify(): Expr {
