@@ -1,6 +1,6 @@
-import type { Expr } from "../Expr";
 import { Pow } from "../core/Pow";
 import { Rational } from "../core/Rational";
+import type { Expr } from "../Expr";
 
 /**
  * Returns the square root of x as Pow(x, Rational(1, 2))

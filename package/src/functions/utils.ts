@@ -1,9 +1,9 @@
 import { PiConstant } from "../constants/Pi";
-import type { Expr } from "../Expr";
 import { Mul } from "../core/Mul";
 import { Neg } from "../core/Neg";
 import { Num } from "../core/Num";
 import { Rational } from "../core/Rational";
+import type { Expr } from "../Expr";
 
 /**
  * If `expr` equals (numerator/denominator) * π, returns [numerator, denominator].

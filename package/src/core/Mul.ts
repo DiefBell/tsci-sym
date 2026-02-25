@@ -1,5 +1,5 @@
-import { Add } from "./Add";
 import { Expr } from "../Expr";
+import { Add } from "./Add";
 import { Num } from "./Num";
 import { Pow } from "./Pow";
 import { Rational } from "./Rational";

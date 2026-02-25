@@ -5,9 +5,17 @@
 	"scripts": {
 		"build": "bun run --filter='*' build",
 		"watch": "bun run --filter='*' watch",
-		"typecheck": "bun run --filter='*' typecheck"
+		"typecheck": "bun run --filter='*' typecheck",
+		"check": "bun run --filter='*' check",
+		"format": "bun run --filter='*' format",
+		"prepare": "husky"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "^2.3.14"
+		"@biomejs/biome": "^2.3.14",
+		"husky": "^9.1.7",
+		"lint-staged": "^16.2.7"
+	},
+	"lint-staged": {
+		"*": "bun run format"
 	}
 }

@@ -1,13 +1,13 @@
-import { Abs } from "../functions/Abs";
 import { Add } from "../core/Add";
-import type { Expr } from "../Expr";
-import { Log } from "../functions/Log";
 import { Mul } from "../core/Mul";
 import { Neg } from "../core/Neg";
 import { Num } from "../core/Num";
 import { Pow } from "../core/Pow";
 import { Rational } from "../core/Rational";
 import { Sym } from "../core/Sym";
+import type { Expr } from "../Expr";
+import { Abs } from "../functions/Abs";
+import { Log } from "../functions/Log";
 
 /** Returns true if the expression tree contains the given symbol anywhere. */
 function containsSym(expr: Expr, sym: Sym): boolean {

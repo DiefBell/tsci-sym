@@ -36,7 +36,9 @@ export class Sym extends Expr<readonly []> {
 
 	/** Produces a stable, sorted string from name + assumptions for use as a cache/identity key. */
 	static #cacheKey(name: string, assumptions: Assumptions): string {
-		const parts = (Object.entries(assumptions) as [string, boolean | undefined][])
+		const parts = (
+			Object.entries(assumptions) as [string, boolean | undefined][]
+		)
 			.filter(([, v]) => v !== undefined)
 			.sort(([a], [b]) => a.localeCompare(b))
 			.map(([k, v]) => `${k}=${v}`);
@@ -52,11 +54,19 @@ export class Sym extends Expr<readonly []> {
 		return `Sym(${Sym.#cacheKey(this.name, this.assumptions)})`;
 	}
 
-	get args(): readonly [] { return []; }
-	map(_fn: (e: Expr) => Expr): Expr { return this; }
+	get args(): readonly [] {
+		return [];
+	}
+	map(_fn: (e: Expr) => Expr): Expr {
+		return this;
+	}
 
 	/** A symbol is its own free variable. */
-	override freeSymbols(): Set<Sym> { return new Set([this]); }
+	override freeSymbols(): Set<Sym> {
+		return new Set([this]);
+	}
 
-	protected _simplify(): Expr { return this; }
+	protected _simplify(): Expr {
+		return this;
+	}
 }

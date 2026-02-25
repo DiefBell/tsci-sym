@@ -1,15 +1,15 @@
-import { Abs } from "../functions/Abs";
-import type { Expr } from "../Expr";
-import { Log } from "../functions/Log";
 import { Mul } from "../core/Mul";
 import { Num } from "../core/Num";
 import { Pow } from "../core/Pow";
 import { Rational } from "../core/Rational";
 import type { Sym } from "../core/Sym";
+import type { Expr } from "../Expr";
+import { Abs } from "../functions/Abs";
 import { Acos } from "../functions/Acos";
 import { Asin } from "../functions/Asin";
 import { Atan } from "../functions/Atan";
 import { Cos } from "../functions/Cos";
+import { Log } from "../functions/Log";
 import { Sin } from "../functions/Sin";
 import { Tan } from "../functions/Tan";
 

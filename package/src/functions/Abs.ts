@@ -1,7 +1,7 @@
-import { Expr } from "../Expr";
 import { Mul } from "../core/Mul";
 import { Num } from "../core/Num";
 import { Rational } from "../core/Rational";
+import { Expr } from "../Expr";
 
 export class Abs extends Expr<readonly [Expr]> {
 	constructor(public readonly inner: Expr) {

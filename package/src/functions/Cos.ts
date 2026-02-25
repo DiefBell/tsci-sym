@@ -1,5 +1,5 @@
-import { Expr } from "../Expr";
 import { Num } from "../core/Num";
+import { Expr } from "../Expr";
 import { isNegated, piCoeff, stripNeg } from "./utils";
 
 /**

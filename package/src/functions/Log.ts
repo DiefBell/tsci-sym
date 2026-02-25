@@ -1,7 +1,7 @@
 import { EulerNumber } from "../constants/E";
-import { Expr } from "../Expr";
 import { Num } from "../core/Num";
 import { Pow } from "../core/Pow";
+import { Expr } from "../Expr";
 
 /** Natural logarithm (base e). log(E) = 1, log(1) = 0, log(e^x) = x */
 export class Log extends Expr<readonly [Expr]> {

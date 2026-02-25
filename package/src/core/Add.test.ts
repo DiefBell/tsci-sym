@@ -88,9 +88,7 @@ describe("Add.simplify() — numeric folding", () => {
 
 describe("Add.simplify() — like-term collection", () => {
 	it("x + x = 2x", () => {
-		expect(new Add(x, x).simplify().key()).toBe(
-			new Mul(new Num(2), x).key(),
-		);
+		expect(new Add(x, x).simplify().key()).toBe(new Mul(new Num(2), x).key());
 	});
 
 	it("2x + 3x = 5x", () => {
@@ -117,10 +115,7 @@ describe("Add.simplify() — like-term collection", () => {
 describe("Add.simplify() — Rational coefficients", () => {
 	it("(1/2)x + (1/2)x = x", () => {
 		expect(
-			new Add(
-				new Mul(new Rational(1, 2), x),
-				new Mul(new Rational(1, 2), x),
-			)
+			new Add(new Mul(new Rational(1, 2), x), new Mul(new Rational(1, 2), x))
 				.simplify()
 				.key(),
 		).toBe(x.key());
@@ -128,10 +123,7 @@ describe("Add.simplify() — Rational coefficients", () => {
 
 	it("(1/2)x + (3/2)x = 2x", () => {
 		expect(
-			new Add(
-				new Mul(new Rational(1, 2), x),
-				new Mul(new Rational(3, 2), x),
-			)
+			new Add(new Mul(new Rational(1, 2), x), new Mul(new Rational(3, 2), x))
 				.simplify()
 				.key(),
 		).toBe(new Mul(new Num(2), x).key());
@@ -139,10 +131,7 @@ describe("Add.simplify() — Rational coefficients", () => {
 
 	it("(1/3)x + (1/3)x = (2/3)x", () => {
 		expect(
-			new Add(
-				new Mul(new Rational(1, 3), x),
-				new Mul(new Rational(1, 3), x),
-			)
+			new Add(new Mul(new Rational(1, 3), x), new Mul(new Rational(1, 3), x))
 				.simplify()
 				.key(),
 		).toBe(new Mul(new Rational(2, 3), x).key());

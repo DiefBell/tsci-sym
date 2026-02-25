@@ -60,10 +60,7 @@ describe("solve — linear equations", () => {
 	});
 
 	it("3x - 1 = 0  →  x = 1/3", () => {
-		const [sol] = solve(
-			new Add(new Mul(new Num(3), x), new Num(-1)),
-			x,
-		);
+		const [sol] = solve(new Add(new Mul(new Num(3), x), new Num(-1)), x);
 		expect(sol?.key()).toBe(new Rational(1, 3).key());
 	});
 
