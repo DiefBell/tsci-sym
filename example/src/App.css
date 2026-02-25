@@ -72,6 +72,14 @@ section h2 {
 	margin-bottom: 0.3rem;
 }
 
+.card-label.secondary {
+	margin-top: 0.5rem;
+	color: #8b949e;
+	text-transform: none;
+	letter-spacing: 0;
+	font-style: italic;
+}
+
 .mono {
 	font-family:
 		"Fira Code", "Cascadia Code", "JetBrains Mono", ui-monospace,
