@@ -15,9 +15,8 @@ export class Rational extends Expr<readonly []> {
 	readonly numerator!: bigint;
 	readonly denominator!: bigint;
 
+	// biome-ignore lint/correctness/noUnreachableSuper: Don't run super if using cached value
 	constructor(numerator: number | bigint, denominator: number | bigint = 1) {
-		super();
-
 		let p = BigInt(numerator);
 		let q = BigInt(denominator);
 
@@ -36,6 +35,8 @@ export class Rational extends Expr<readonly []> {
 		const cached = Rational.#cache.get(`${p},${q}`);
 		// biome-ignore lint/correctness/noConstructorReturn: we need caching
 		if (cached) return cached;
+
+		super();
 
 		this.numerator = p;
 		this.denominator = q;

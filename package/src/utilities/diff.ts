@@ -151,7 +151,10 @@ export function diff(expr: Expr, sym: Sym): Expr {
 	if (expr instanceof Asin) {
 		const df = diff(expr.inner, sym);
 		const radical = new Pow(
-			new Add(new Num(1), new Mul(new Num(-1), new Pow(expr.inner, new Num(2)))),
+			new Add(
+				new Num(1),
+				new Mul(new Num(-1), new Pow(expr.inner, new Num(2))),
+			),
 			new Rational(-1, 2),
 		);
 		return new Mul(df, radical).simplify();
@@ -162,7 +165,10 @@ export function diff(expr: Expr, sym: Sym): Expr {
 	if (expr instanceof Acos) {
 		const df = diff(expr.inner, sym);
 		const radical = new Pow(
-			new Add(new Num(1), new Mul(new Num(-1), new Pow(expr.inner, new Num(2)))),
+			new Add(
+				new Num(1),
+				new Mul(new Num(-1), new Pow(expr.inner, new Num(2))),
+			),
 			new Rational(-1, 2),
 		);
 		return new Neg(new Mul(df, radical)).simplify();

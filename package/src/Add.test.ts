@@ -35,7 +35,7 @@ describe("Add.key()", () => {
 			new Add(y, new Add(x, z)),
 			new Add(z, new Add(x, y)),
 		];
-		const first = all[0]!.key();
+		const first = all[0]?.key();
 		for (const expr of all) expect(expr.key()).toBe(first);
 	});
 

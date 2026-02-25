@@ -1,5 +1,5 @@
 import type { Expr } from "../Expr";
-import { Sym } from "../Sym";
+import type { Sym } from "../Sym";
 import { RULES } from "./rules";
 
 /**

@@ -20,13 +20,13 @@ export function isNumericCoeff(e: Expr): e is Num | Rational {
 /** Returns true if `expr` contains `sym` anywhere in its tree. */
 export function containsSym(expr: Expr, sym: Sym): boolean {
 	if (expr === sym) return true;
-	return expr.args.some(child => containsSym(child, sym));
+	return expr.args.some((child) => containsSym(child, sym));
 }
 
 /** Structurally substitutes all occurrences of `from` with `to` in `expr`. */
 export function substitute(expr: Expr, from: Expr, to: Expr): Expr {
 	if (expr.key() === from.key()) return to;
-	return expr.map(child => substitute(child, from, to));
+	return expr.map((child) => substitute(child, from, to));
 }
 
 /**

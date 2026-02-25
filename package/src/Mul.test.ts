@@ -36,7 +36,7 @@ describe("Mul.key()", () => {
 			new Mul(y, new Mul(x, z)),
 			new Mul(z, new Mul(x, y)),
 		];
-		const first = all[0]!.key();
+		const first = all[0]?.key();
 		for (const expr of all) expect(expr.key()).toBe(first);
 	});
 

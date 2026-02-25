@@ -3,9 +3,12 @@ import { Expr } from "./Expr";
 export class Num extends Expr<readonly []> {
 	static readonly #cache = new Map<number, Num>();
 
+	// biome-ignore lint/correctness/noUnreachableSuper: Don't run super if using cached value
 	constructor(public readonly value: number) {
 		const cached = Num.#cache.get(value);
+		// biome-ignore lint/correctness/noConstructorReturn: We need this for caching
 		if (cached) return cached;
+
 		super();
 		Num.#cache.set(value, this);
 	}

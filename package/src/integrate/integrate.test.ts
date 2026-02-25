@@ -54,10 +54,7 @@ describe("integrate — sum rule (Add)", () => {
 	});
 
 	it("∫ (x² + x) dx = x³/3 + x²/2", () => {
-		const result = integrate(
-			new Add(new Pow(x, new Num(2)), x),
-			x,
-		);
+		const result = integrate(new Add(new Pow(x, new Num(2)), x), x);
 		const expected = new Add(
 			new Mul(new Rational(1, 3), new Pow(x, new Num(3))),
 			new Mul(new Rational(1, 2), new Pow(x, new Num(2))),
@@ -124,19 +121,16 @@ describe("integrate — power rule", () => {
 
 	it("∫ x^(1/2) dx = (2/3)·x^(3/2)", () => {
 		expect(integrate(new Pow(x, new Rational(1, 2)), x).key()).toBe(
-			new Mul(
-				new Rational(2, 3),
-				new Pow(x, new Rational(3, 2)),
-			).simplify().key(),
+			new Mul(new Rational(2, 3), new Pow(x, new Rational(3, 2)))
+				.simplify()
+				.key(),
 		);
 	});
 });
 
 describe("integrate — reciprocal rule", () => {
 	it("∫ x^(-1) dx = ln(x)", () => {
-		expect(integrate(new Pow(x, new Num(-1)), x).key()).toBe(
-			new Log(x).key(),
-		);
+		expect(integrate(new Pow(x, new Num(-1)), x).key()).toBe(new Log(x).key());
 	});
 });
 

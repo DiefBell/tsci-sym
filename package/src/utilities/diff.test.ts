@@ -95,7 +95,9 @@ describe("diff — Pow (power rule)", () => {
 
 	it("d/dx(x^3) = 3x^2", () => {
 		const result = diff(new Pow(x, new Num(3)), x);
-		expect(result.key()).toBe(new Mul(new Num(3), new Pow(x, new Num(2))).key());
+		expect(result.key()).toBe(
+			new Mul(new Num(3), new Pow(x, new Num(2))).key(),
+		);
 	});
 
 	it("d/dx(x^1) = 1", () => {
@@ -134,7 +136,10 @@ describe("diff — Log", () => {
 	it("d/dx(ln(3x)) = 3·(3x)^(-1)", () => {
 		// Full reduction to x^(-1) requires Pow(Mul(a,b),n) distribution, not yet implemented.
 		const result = diff(new Log(new Mul(new Num(3), x)), x);
-		const expected = new Mul(new Num(3), new Pow(new Mul(new Num(3), x), new Num(-1)));
+		const expected = new Mul(
+			new Num(3),
+			new Pow(new Mul(new Num(3), x), new Num(-1)),
+		);
 		expect(result.key()).toBe(expected.simplify().key());
 	});
 });
@@ -152,12 +157,18 @@ describe("diff — chain rule via composition", () => {
 	it("d/dx(ln(3x)) chains correctly through Mul and Log", () => {
 		// ln(3x)' = (3x)'/(3x) = 3/(3x); full reduction to 1/x needs Pow(Mul,n) distribution.
 		const result = diff(new Log(new Mul(new Num(3), x)), x);
-		const expected = new Mul(new Num(3), new Pow(new Mul(new Num(3), x), new Num(-1)));
+		const expected = new Mul(
+			new Num(3),
+			new Pow(new Mul(new Num(3), x), new Num(-1)),
+		);
 		expect(result.key()).toBe(expected.simplify().key());
 	});
 
 	it("d/dx(x^2 + 3x + 1) = 2x + 3", () => {
-		const poly = new Add(new Add(new Pow(x, new Num(2)), new Mul(new Num(3), x)), new Num(1));
+		const poly = new Add(
+			new Add(new Pow(x, new Num(2)), new Mul(new Num(3), x)),
+			new Num(1),
+		);
 		const result = diff(poly, x);
 		const expected = new Add(new Mul(new Num(2), x), new Num(3));
 		expect(result.key()).toBe(expected.simplify().key());

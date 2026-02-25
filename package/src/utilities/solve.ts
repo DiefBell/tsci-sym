@@ -1,6 +1,6 @@
 import { Abs } from "../Abs";
 import { Add } from "../Add";
-import { Expr } from "../Expr";
+import type { Expr } from "../Expr";
 import { Log } from "../Log";
 import { Mul } from "../Mul";
 import { Neg } from "../Neg";
@@ -27,7 +27,8 @@ function containsSym(expr: Expr, sym: Sym): boolean {
  * Returns null if expr is not linear in sym.
  */
 function linearCoeffs(expr: Expr, sym: Sym): [Expr, Expr] | null {
-	if (expr instanceof Num || expr instanceof Rational) return [new Num(0), expr];
+	if (expr instanceof Num || expr instanceof Rational)
+		return [new Num(0), expr];
 
 	if (expr instanceof Sym)
 		return expr === sym ? [new Num(1), new Num(0)] : [new Num(0), expr];
@@ -46,10 +47,7 @@ function linearCoeffs(expr: Expr, sym: Sym): [Expr, Expr] | null {
 		const lc = linearCoeffs(expr.left, sym);
 		const rc = linearCoeffs(expr.right, sym);
 		if (!lc || !rc) return null;
-		return [
-			new Add(lc[0], rc[0]).simplify(),
-			new Add(lc[1], rc[1]).simplify(),
-		];
+		return [new Add(lc[0], rc[0]).simplify(), new Add(lc[1], rc[1]).simplify()];
 	}
 
 	if (expr instanceof Neg) {

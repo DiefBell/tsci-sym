@@ -3,11 +3,13 @@ import { Expr } from "./Expr";
 export class Sym extends Expr<readonly []> {
 	static readonly #cache = new Map<string, Sym>();
 
+	// biome-ignore lint/correctness/noUnreachableSuper: Don't run super if using cached value
 	constructor(public readonly name: string) {
-		super();
 		const cached = Sym.#cache.get(name);
 		// biome-ignore lint/correctness/noConstructorReturn: We want caching
 		if (cached) return cached;
+
+		super();
 		Sym.#cache.set(name, this);
 	}
 
