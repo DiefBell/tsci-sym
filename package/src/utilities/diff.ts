@@ -1,21 +1,21 @@
-import { Abs } from "../Abs";
-import { Add } from "../Add";
+import { Abs } from "../functions/Abs";
+import { Add } from "../core/Add";
 import { EulerNumber } from "../constants/E";
 import { PiConstant } from "../constants/Pi";
 import type { Expr } from "../Expr";
-import { Log } from "../Log";
-import { Mul } from "../Mul";
-import { Neg } from "../Neg";
-import { Num } from "../Num";
-import { Pow } from "../Pow";
-import { Rational } from "../Rational";
-import { Sym } from "../Sym";
-import { Acos } from "../trig/Acos";
-import { Asin } from "../trig/Asin";
-import { Atan } from "../trig/Atan";
-import { Cos } from "../trig/Cos";
-import { Sin } from "../trig/Sin";
-import { Tan } from "../trig/Tan";
+import { Log } from "../functions/Log";
+import { Mul } from "../core/Mul";
+import { Neg } from "../core/Neg";
+import { Num } from "../core/Num";
+import { Pow } from "../core/Pow";
+import { Rational } from "../core/Rational";
+import { Sym } from "../core/Sym";
+import { Acos } from "../functions/Acos";
+import { Asin } from "../functions/Asin";
+import { Atan } from "../functions/Atan";
+import { Cos } from "../functions/Cos";
+import { Sin } from "../functions/Sin";
+import { Tan } from "../functions/Tan";
 
 /**
  * Symbolically differentiates `expr` with respect to `sym`.

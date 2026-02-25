@@ -1,12 +1,12 @@
 import { describe, expect, it } from "bun:test";
-import { Add } from "../Add";
-import { Mul } from "../Mul";
-import { Neg } from "../Neg";
-import { Num } from "../Num";
-import { Pow } from "../Pow";
-import { Rational } from "../Rational";
-import { Sym } from "../Sym";
-import { Sin } from "../trig/Sin";
+import { Add } from "../core/Add";
+import { Mul } from "../core/Mul";
+import { Neg } from "../core/Neg";
+import { Num } from "../core/Num";
+import { Pow } from "../core/Pow";
+import { Rational } from "../core/Rational";
+import { Sym } from "../core/Sym";
+import { Sin } from "../functions/Sin";
 import { solve } from "./solve";
 
 const x = new Sym("x");

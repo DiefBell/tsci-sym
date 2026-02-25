@@ -1,5 +1,5 @@
-import { ImaginaryUnit } from "./constants/I";
-import { Expr } from "./Expr";
+import { ImaginaryUnit } from "../constants/I";
+import { Expr } from "../Expr";
 import { Mul } from "./Mul";
 import { Neg } from "./Neg";
 import { Num } from "./Num";

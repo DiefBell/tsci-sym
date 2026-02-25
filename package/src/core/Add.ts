@@ -1,4 +1,4 @@
-import { Expr } from "./Expr";
+import { Expr } from "../Expr";
 import { Mul } from "./Mul";
 import { Neg } from "./Neg";
 import { Num } from "./Num";

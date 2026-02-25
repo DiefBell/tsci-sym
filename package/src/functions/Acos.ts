@@ -1,8 +1,8 @@
 import { PiConstant } from "../constants/Pi";
 import { Expr } from "../Expr";
-import { Mul } from "../Mul";
-import { Num } from "../Num";
-import { Rational } from "../Rational";
+import { Mul } from "../core/Mul";
+import { Num } from "../core/Num";
+import { Rational } from "../core/Rational";
 
 /**
  * Inverse cosine: acos(inner).

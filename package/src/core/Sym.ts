@@ -1,4 +1,4 @@
-import { Expr } from "./Expr";
+import { Expr } from "../Expr";
 
 /**
  * Optional mathematical assumptions about a symbol's domain.

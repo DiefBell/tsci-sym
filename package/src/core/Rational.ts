@@ -1,4 +1,4 @@
-import { Expr } from "./Expr";
+import { Expr } from "../Expr";
 import { Num } from "./Num";
 
 /** Greatest Common Divisor via the Euclidean algorithm. Used to reduce fractions to lowest terms. */

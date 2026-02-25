@@ -1,5 +1,5 @@
 // `import type` breaks the circular dep: Sym imports Expr (value), Expr imports Sym (type only).
-import type { Sym } from "./Sym";
+import type { Sym } from "./core/Sym";
 
 export abstract class Expr<
 	// biome-ignore lint/suspicious/noExplicitAny: <>

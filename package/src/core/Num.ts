@@ -1,4 +1,4 @@
-import { Expr } from "./Expr";
+import { Expr } from "../Expr";
 
 export class Num extends Expr<readonly []> {
 	static readonly #cache = new Map<number, Num>();

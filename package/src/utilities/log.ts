@@ -1,8 +1,8 @@
 import type { Expr } from "../Expr";
-import { Log } from "../Log";
-import { Mul } from "../Mul";
-import { Num } from "../Num";
-import { Pow } from "../Pow";
+import { Log } from "../functions/Log";
+import { Mul } from "../core/Mul";
+import { Num } from "../core/Num";
+import { Pow } from "../core/Pow";
 
 /** Natural log of x. With an optional base, expands to log(x) / log(base) via change-of-base. */
 

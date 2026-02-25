@@ -1,17 +1,17 @@
-import { Abs } from "../Abs";
+import { Abs } from "../functions/Abs";
 import type { Expr } from "../Expr";
-import { Log } from "../Log";
-import { Mul } from "../Mul";
-import { Num } from "../Num";
-import { Pow } from "../Pow";
-import { Rational } from "../Rational";
-import type { Sym } from "../Sym";
-import { Acos } from "../trig/Acos";
-import { Asin } from "../trig/Asin";
-import { Atan } from "../trig/Atan";
-import { Cos } from "../trig/Cos";
-import { Sin } from "../trig/Sin";
-import { Tan } from "../trig/Tan";
+import { Log } from "../functions/Log";
+import { Mul } from "../core/Mul";
+import { Num } from "../core/Num";
+import { Pow } from "../core/Pow";
+import { Rational } from "../core/Rational";
+import type { Sym } from "../core/Sym";
+import { Acos } from "../functions/Acos";
+import { Asin } from "../functions/Asin";
+import { Atan } from "../functions/Atan";
+import { Cos } from "../functions/Cos";
+import { Sin } from "../functions/Sin";
+import { Tan } from "../functions/Tan";
 
 export function isNumericCoeff(e: Expr): e is Num | Rational {
 	return e instanceof Num || e instanceof Rational;

@@ -1,5 +1,5 @@
 import { Add } from "./Add";
-import { Expr } from "./Expr";
+import { Expr } from "../Expr";
 import { Mul } from "./Mul";
 import { Num } from "./Num";
 

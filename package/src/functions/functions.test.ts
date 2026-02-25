@@ -1,10 +1,10 @@
 import { describe, expect, it } from "bun:test";
 import { Pi } from "../constants/Pi";
-import { Mul } from "../Mul";
-import { Neg } from "../Neg";
-import { Num } from "../Num";
-import { Rational } from "../Rational";
-import { Sym } from "../Sym";
+import { Mul } from "../core/Mul";
+import { Neg } from "../core/Neg";
+import { Num } from "../core/Num";
+import { Rational } from "../core/Rational";
+import { Sym } from "../core/Sym";
 import { Acos } from "./Acos";
 import { Asin } from "./Asin";
 import { Atan } from "./Atan";
