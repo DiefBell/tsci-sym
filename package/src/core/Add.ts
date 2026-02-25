@@ -38,6 +38,12 @@ export class Add extends Expr<readonly [Expr, Expr]> {
 		if (this.right instanceof Neg) {
 			return `(${this.left} - ${this.right.inner})`;
 		}
+		if (this.right instanceof Num && this.right.value < 0) {
+			return `(${this.left} - ${new Num(-this.right.value)})`;
+		}
+		if (this.right instanceof Rational && this.right.numerator < 0n) {
+			return `(${this.left} - ${new Rational(-this.right.numerator, this.right.denominator).simplify()})`;
+		}
 		if (
 			this.right instanceof Mul &&
 			this.right.left instanceof Num &&
