@@ -24,7 +24,7 @@ export class Log extends Expr<readonly [Expr]> {
 		return `log(${this.inner})`;
 	}
 
-	simplify(): Expr {
+	protected _simplify(): Expr {
 		const inner = this.inner.simplify();
 
 		// log(1) = 0

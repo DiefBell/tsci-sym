@@ -36,7 +36,7 @@ export class Atan extends Expr<readonly [Expr]> {
 		return `atan(${this.inner})`;
 	}
 
-	simplify(): Expr {
+	protected _simplify(): Expr {
 		const inner = this.inner.simplify();
 
 		if (inner instanceof Num) {

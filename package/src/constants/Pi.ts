@@ -27,7 +27,7 @@ export class PiConstant extends Expr<readonly []> {
 	toString() {
 		return "Pi";
 	}
-	simplify(): Expr {
+	protected _simplify(): Expr {
 		return this;
 	}
 }

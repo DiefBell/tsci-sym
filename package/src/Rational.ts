@@ -59,7 +59,7 @@ export class Rational extends Expr<readonly []> {
 		return this;
 	}
 
-	simplify(): Expr {
+	protected _simplify(): Expr {
 		if (this.denominator === 1n) return new Num(Number(this.numerator));
 		return this;
 	}

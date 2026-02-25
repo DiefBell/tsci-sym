@@ -28,7 +28,7 @@ export class Num extends Expr<readonly []> {
 		return this;
 	}
 
-	simplify(): Expr {
+	protected _simplify(): Expr {
 		return this; // already simplest
 	}
 }

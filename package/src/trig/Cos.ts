@@ -32,7 +32,7 @@ export class Cos extends Expr<readonly [Expr]> {
 		return `cos(${this.inner})`;
 	}
 
-	simplify(): Expr {
+	protected _simplify(): Expr {
 		const inner = this.inner.simplify();
 
 		// Numeric evaluation

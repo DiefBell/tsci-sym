@@ -36,7 +36,7 @@ export class Asin extends Expr<readonly [Expr]> {
 		return `asin(${this.inner})`;
 	}
 
-	simplify(): Expr {
+	protected _simplify(): Expr {
 		const inner = this.inner.simplify();
 
 		if (inner instanceof Num) {

@@ -36,7 +36,7 @@ export class Acos extends Expr<readonly [Expr]> {
 		return `acos(${this.inner})`;
 	}
 
-	simplify(): Expr {
+	protected _simplify(): Expr {
 		const inner = this.inner.simplify();
 
 		if (inner instanceof Num) {

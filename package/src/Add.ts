@@ -50,7 +50,7 @@ export class Add extends Expr<readonly [Expr, Expr]> {
 		return `(${this.left} + ${this.right})`;
 	}
 
-	simplify(): Expr {
+	protected _simplify(): Expr {
 		// Simplify children first
 		const l = this.left.simplify();
 		const r = this.right.simplify();

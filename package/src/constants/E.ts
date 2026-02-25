@@ -27,7 +27,7 @@ export class EulerNumber extends Expr<readonly []> {
 	toString() {
 		return "E";
 	}
-	simplify(): Expr {
+	protected _simplify(): Expr {
 		return this;
 	}
 }

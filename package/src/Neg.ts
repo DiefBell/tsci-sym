@@ -40,7 +40,7 @@ export class Neg extends Expr<readonly [Expr]> {
 		return `Mul[${factors.join(",")}]`;
 	}
 
-	simplify(): Expr {
+	protected _simplify(): Expr {
 		const inner = this.inner.simplify();
 
 		// numeric negation

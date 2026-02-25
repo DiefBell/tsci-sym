@@ -32,7 +32,7 @@ export class Pow extends Expr<readonly [Expr, Expr]> {
 		return `${this.base}^${this.exponent}`;
 	}
 
-	simplify(): Expr {
+	protected _simplify(): Expr {
 		const base = this.base.simplify();
 		const exp = this.exponent.simplify();
 

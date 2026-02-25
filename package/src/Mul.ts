@@ -65,7 +65,7 @@ export class Mul extends Expr<readonly [Expr, Expr]> {
 		return `(${this.left} * ${this.right})`;
 	}
 
-	simplify(): Expr {
+	protected _simplify(): Expr {
 		const l = this.left.simplify();
 		const r = this.right.simplify();
 

@@ -31,7 +31,7 @@ export class Tan extends Expr<readonly [Expr]> {
 		return `tan(${this.inner})`;
 	}
 
-	simplify(): Expr {
+	protected _simplify(): Expr {
 		const inner = this.inner.simplify();
 
 		// Numeric evaluation

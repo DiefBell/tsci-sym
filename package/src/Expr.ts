@@ -5,7 +5,22 @@ export abstract class Expr<
 	// biome-ignore lint/suspicious/noExplicitAny: <>
 	TArgs extends readonly Expr[] = readonly Expr<any>[],
 > {
-	abstract simplify(): Expr;
+	// Cached result of `_simplify()`. Set on first call, reused on subsequent ones.
+	private _simplified?: Expr;
+
+	/**
+	 * Returns this expression in its simplified form.
+	 * The result is cached on the node — repeated calls are free.
+	 * Subclasses implement `_simplify()`, not this method.
+	 */
+	simplify(): Expr {
+		if (!this._simplified) this._simplified = this._simplify();
+		return this._simplified;
+	}
+
+	/** Internal simplification logic. Implement this in each subclass; call `simplify()` publicly. */
+	protected abstract _simplify(): Expr;
+
 	abstract toString(): string;
 
 	/** Structural identity key, distinct from display toString(). Used for comparing expression trees. */
