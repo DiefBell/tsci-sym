@@ -27,8 +27,8 @@ describe("solve — degenerate cases", () => {
 		expect(solve(y, x)).toHaveLength(0);
 	});
 
-	it("non-linear (x²) returns []", () => {
-		expect(solve(new Pow(x, new Num(2)), x)).toHaveLength(0);
+	it("cubic (x³) returns []", () => {
+		expect(solve(new Pow(x, new Num(3)), x)).toHaveLength(0);
 	});
 
 	it("transcendental (sin(x)) returns []", () => {
@@ -91,6 +91,61 @@ describe("solve — pre-simplification", () => {
 		const expr = new Add(new Add(x, x), x);
 		const [sol] = solve(expr, x);
 		expect(sol?.key()).toBe(new Num(0).key());
+	});
+});
+
+// ─── Quadratic equations ──────────────────────────────────────────────────────
+
+describe("solve — quadratic equations", () => {
+	it("x² = 0  →  x = 0  (double root)", () => {
+		const [sol] = solve(new Pow(x, new Num(2)), x);
+		expect(sol?.key()).toBe(new Num(0).key());
+	});
+
+	it("x² - 4 = 0  →  x = ±2", () => {
+		const sols = solve(new Add(new Pow(x, new Num(2)), new Num(-4)), x);
+		expect(sols).toHaveLength(2);
+		const keys = sols.map((s) => s.key());
+		expect(keys).toContain(new Num(2).key());
+		expect(keys).toContain(new Num(-2).key());
+	});
+
+	it("x² - 1 = 0  →  x = ±1", () => {
+		const sols = solve(new Add(new Pow(x, new Num(2)), new Num(-1)), x);
+		expect(sols).toHaveLength(2);
+		const keys = sols.map((s) => s.key());
+		expect(keys).toContain(new Num(1).key());
+		expect(keys).toContain(new Num(-1).key());
+	});
+
+	it("x² + 2x + 1 = 0  →  x = -1  (double root)", () => {
+		const expr = new Add(
+			new Add(new Pow(x, new Num(2)), new Mul(new Num(2), x)),
+			new Num(1),
+		);
+		const sols = solve(expr, x);
+		expect(sols).toHaveLength(1);
+		expect(sols[0]?.key()).toBe(new Num(-1).key());
+	});
+
+	it("x² + x = 0  →  x = 0 or x = -1", () => {
+		const sols = solve(new Add(new Pow(x, new Num(2)), x), x);
+		expect(sols).toHaveLength(2);
+		const keys = sols.map((s) => s.key());
+		expect(keys).toContain(new Num(0).key());
+		expect(keys).toContain(new Num(-1).key());
+	});
+
+	it("2x² - 8 = 0  →  x = ±2", () => {
+		const expr = new Add(
+			new Mul(new Num(2), new Pow(x, new Num(2))),
+			new Num(-8),
+		);
+		const sols = solve(expr, x);
+		expect(sols).toHaveLength(2);
+		const keys = sols.map((s) => s.key());
+		expect(keys).toContain(new Num(2).key());
+		expect(keys).toContain(new Num(-2).key());
 	});
 });
 
