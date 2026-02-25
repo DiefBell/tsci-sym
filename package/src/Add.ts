@@ -2,6 +2,7 @@ import { Expr } from "./Expr";
 import { Mul } from "./Mul";
 import { Neg } from "./Neg";
 import { Num } from "./Num";
+import { Rational } from "./Rational";
 
 export class Add extends Expr<readonly [Expr, Expr]> {
 	constructor(
@@ -51,11 +52,10 @@ export class Add extends Expr<readonly [Expr, Expr]> {
 	}
 
 	protected _simplify(): Expr {
-		// Simplify children first
 		const l = this.left.simplify();
 		const r = this.right.simplify();
 
-		// Flatten nested Adds
+		// Flatten nested Adds into a flat term list (children already simplified)
 		const terms: Expr[] = [];
 		function collect(expr: Expr) {
 			if (expr instanceof Add) {
@@ -68,53 +68,52 @@ export class Add extends Expr<readonly [Expr, Expr]> {
 		collect(l);
 		collect(r);
 
-		// Combine numeric constants
-		let sum = 0;
-		const rest: Expr[] = [];
-		for (const t of terms) {
-			if (t instanceof Num) sum += t.value;
-			else rest.push(t);
-		}
-		if (sum !== 0) rest.push(new Num(sum));
-
-		// Combine like terms by extracting (coefficient, base) from each term
-		function extractCoeff(term: Expr): [number, Expr] {
+		// Extract exact (coefficient, symbolic-base) from a term using Rational arithmetic.
+		// Pure integer Num and standalone Rational get base Num(1) so they accumulate together.
+		// Non-integer Num floats and unrecognised Mul structures are treated as opaque (coeff 1).
+		function extractCoeff(term: Expr): [Rational, Expr] {
+			if (term instanceof Rational) return [term, new Num(1)];
+			if (term instanceof Num && Number.isInteger(term.value))
+				return [new Rational(term.value), new Num(1)];
 			if (term instanceof Mul) {
-				if (term.left instanceof Num) return [term.left.value, term.right];
-				if (term.right instanceof Num) return [term.right.value, term.left];
+				if (term.left instanceof Rational) return [term.left, term.right];
+				if (term.left instanceof Num && Number.isInteger(term.left.value))
+					return [new Rational(term.left.value), term.right];
+				if (term.right instanceof Rational) return [term.right, term.left];
+				if (term.right instanceof Num && Number.isInteger(term.right.value))
+					return [new Rational(term.right.value), term.left];
 			}
-			return [1, term];
+			return [new Rational(1), term];
 		}
 
-		const coeffMap = new Map<string, { coeff: number; base: Expr }>();
-		for (const t of rest) {
+		// Group terms by symbolic base, summing coefficients with exact Rational arithmetic
+		const coeffMap = new Map<string, { coeff: Rational; base: Expr }>();
+		for (const t of terms) {
 			const [coeff, base] = extractCoeff(t);
 			const key = base.key();
 			const existing = coeffMap.get(key);
-			if (existing) existing.coeff += coeff;
+			if (existing) existing.coeff = existing.coeff.add(coeff);
 			else coeffMap.set(key, { coeff, base });
 		}
 
+		// Rebuild combined terms, dropping zero-coefficient entries
 		const combined: Expr[] = [];
 		for (const { coeff, base } of coeffMap.values()) {
-			if (coeff === 0) continue;
-			if (coeff === 1) combined.push(base);
-			else combined.push(new Mul(new Num(coeff), base).simplify());
+			if (coeff.numerator === 0n) continue;
+			const coeffExpr: Expr =
+				coeff.denominator === 1n ? new Num(Number(coeff.numerator)) : coeff;
+			combined.push(new Mul(coeffExpr, base).simplify());
 		}
 
-		// Put positive-coefficient terms first so toString can render negatives as subtraction
+		// Put positive-coefficient terms first so toString() renders negatives as subtraction
 		combined.sort((a) => {
 			const [coeff] = extractCoeff(a);
-			return coeff < 0 ? 1 : -1;
+			return coeff.numerator < 0n ? 1 : -1;
 		});
 
-		// Rebuild nested Add
+		// Rebuild nested Add tree
 		if (combined.length === 0) return new Num(0);
-		let result = combined[0];
-		for (let i = 1; i < combined.length; i++) {
-			result = new Add(result!, combined[i]!);
-		}
-		return result!;
+		return combined.reduce((acc, term) => new Add(acc, term));
 	}
 }
 
