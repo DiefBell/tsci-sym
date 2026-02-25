@@ -1,5 +1,7 @@
+import { ImaginaryUnit } from "./constants/I";
 import { Expr } from "./Expr";
 import { Mul } from "./Mul";
+import { Neg } from "./Neg";
 import { Num } from "./Num";
 import { Rational } from "./Rational";
 
@@ -66,6 +68,19 @@ export class Pow extends Expr<readonly [Expr, Expr]> {
 			).simplify();
 		}
 
+		// i^n for integer n — cycles with period 4: i^0=1, i^1=i, i^2=-1, i^3=-i
+		if (
+			base instanceof ImaginaryUnit &&
+			exp instanceof Num &&
+			Number.isInteger(exp.value)
+		) {
+			const mod = ((exp.value % 4) + 4) % 4;
+			if (mod === 0) return new Num(1);
+			if (mod === 1) return base;
+			if (mod === 2) return new Num(-1);
+			return new Neg(base).simplify(); // mod === 3 → -i
+		}
+
 		// integer^(-1) → exact Rational reciprocal (before float folding)
 		if (
 			base instanceof Num &&
@@ -94,6 +109,21 @@ export class Pow extends Expr<readonly [Expr, Expr]> {
 		) {
 			const s = Math.sqrt(base.value);
 			if (Number.isInteger(s)) return new Num(s);
+		}
+
+		// sqrt(-n) = sqrt(n) * i  for n > 0
+		// Covers sqrt(-1) = i as a special case (sqrt(1) * i simplifies to i)
+		if (
+			base instanceof Num &&
+			base.value < 0 &&
+			exp instanceof Rational &&
+			exp.numerator === 1n &&
+			exp.denominator === 2n
+		) {
+			return new Mul(
+				new Pow(new Num(-base.value), exp),
+				ImaginaryUnit.instance,
+			).simplify();
 		}
 
 		return new Pow(base, exp);
