@@ -7,6 +7,6 @@ export { Expr, Expr as Expression } from "./Expr";
 export * from "./functions";
 export * as functions from "./functions";
 export * from "./integrate";
-export * as integrate from "./integrate";
+export * as integration from "./integrate";
 export * from "./utilities";
 export * as util from "./utilities";

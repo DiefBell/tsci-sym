@@ -3,7 +3,7 @@ import {
 	diff,
 	E,
 	evalf,
-	integrate as integrateNS,
+	integrate,
 	Num,
 	Pi,
 	Sin,
@@ -11,8 +11,6 @@ import {
 	solve,
 	subs,
 } from "sym.js";
-
-const { integrate } = integrateNS;
 
 const x = new Sym("x");
 const y = new Sym("y");

@@ -167,6 +167,17 @@ Every expression node exposes:
 - **`toString(): string`** — returns a human-readable string representation
 - **`key(): string`** — returns a canonical string for structural equality checks (`a.key() === b.key()`)
 
+## Limitations
+
+sym.js is a focused library, not a full CAS. Current known limitations:
+
+- **`solve`** handles linear and quadratic equations only. Higher-degree or transcendental equations are not supported.
+- **`integrate`** recognises specific patterns: power rule, trig rules, exponential, log, and u-substitution. Integration by parts for arbitrary expressions (e.g. `x · sin(x)`) is not supported.
+- **Trig identities** are not simplified — `sin²(x) + cos²(x)` will not reduce to `1`.
+- **Complex numbers** — the `I` constant is available, but complex arithmetic is not implemented beyond it.
+- **`x ** -1`** — due to a [bug in boperators 0.3.1](https://github.com/nicolo-ribaudo/tc39-proposal-operator-overloading), the expression `x ** -1` is not correctly transformed at build time. Use `1 / x` instead.
+- **Node.js without a bundler** — the package is ESM-only and uses directory imports that require a bundler (Vite, Rollup, webpack) to resolve. Since boperators itself requires a build-time transform, this is the expected usage.
+
 ## License
 
 MIT. Inspired by [SymPy](https://www.sympy.org).
