@@ -1,10 +1,39 @@
 {
 	"name": "sym.js",
+	"version": "0.1.0",
+	"description": "A SymPy-style symbolic mathematics library for JavaScript",
 	"type": "module",
+	"license": "MIT",
+	"author": "DiefBell",
+	"homepage": "https://github.com/DiefBell/sym-js/tree/main/package",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/DiefBell/sym-js.git",
+		"directory": "package"
+	},
+	"keywords": [
+		"symbolic",
+		"mathematics",
+		"algebra",
+		"calculus",
+		"computer-algebra-system",
+		"cas",
+		"sympy",
+		"differentiation",
+		"integration",
+		"simplify"
+	],
 	"module": "dist/index.js",
+	"exports": {
+		".": {
+			"import": "./dist/index.js",
+			"types": "./dist/index.d.ts"
+		}
+	},
 	"types": "dist/index.d.ts",
 	"files": [
 		"README.md",
+		"LICENSE",
 		"dist"
 	],
 	"scripts": {
@@ -16,7 +45,7 @@
 	},
 	"peerDependencies": {
 		"typescript": "^5",
-		"boperators": "^0.1.0"
+		"boperators": "^0.3.1"
 	},
 	"devDependencies": {
 		"@types/bun": "^1.1.16"

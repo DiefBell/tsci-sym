@@ -1,10 +1,39 @@
 # sym.js
 
-A symbolic mathematics library for JavaScript. Build and simplify algebraic expressions using native operators.
+A SymPy-style symbolic mathematics library for JavaScript. Build, simplify, differentiate, integrate, and solve algebraic expressions using native TypeScript operators.
+
+```ts
+import { Sym, Pi, Sin, diff, solve } from "sym.js";
+
+const x = new Sym("x");
+
+(x ** 2 - 4).simplify().toString();          // "(x^2 - 4)"
+solve(x ** 2 - 4, x).map(String);            // ["-2", "2"]
+diff(new Sin(x) * x ** 2, x).toString();     // product rule result
+```
 
 ## Prerequisites
 
-sym.js relies on [boperators](https://github.com/nicolo-ribaudo/tc39-proposal-operator-overloading) for operator overloading. Your project needs the boperators TypeScript plugins configured so that `+`, `-`, `*`, and `**` work directly on expressions.
+sym.js uses [boperators](https://github.com/nicolo-ribaudo/tc39-proposal-operator-overloading) for operator overloading, so `+`, `-`, `*`, `/`, and `**` work directly on expression nodes. You need the boperators plugin configured for your build tool.
+
+**Vite:**
+
+```ts
+// vite.config.ts
+import { boperators } from "@boperators/plugin-vite";
+export default defineConfig({ plugins: [boperators()] });
+```
+
+```jsonc
+// tsconfig.json — for editor support
+{
+  "compilerOptions": {
+    "plugins": [{ "name": "@boperators/plugin-ts-language-server" }]
+  }
+}
+```
+
+**Other bundlers / plain tsc:**
 
 ```jsonc
 // tsconfig.json
@@ -18,80 +47,126 @@ sym.js relies on [boperators](https://github.com/nicolo-ribaudo/tc39-proposal-op
 }
 ```
 
-Build with `tspc` (from [ts-patch](https://github.com/nicolo-ribaudo/ts-patch)) instead of `tsc` to apply the transform.
+Build with `tspc` (from [ts-patch](https://github.com/nonara/ts-patch)) instead of `tsc`.
 
-## Usage
+## Installation
 
-```ts
-import { Sym } from "sym.js";
-
-const x = new Sym("x");
-const y = new Sym("y");
-
-const expr = (x + 2 * y + 1) * (x - y) - (x + x) + 3;
-
-console.log(expr.simplify().toString());
+```sh
+npm install sym.js boperators
 ```
 
-Numbers on either side of an operator are automatically wrapped into `Num` nodes, so `x + 1` and `2 * y` work as expected.
+## Expression nodes
 
-## Expression types
+All nodes extend the abstract `Expr` base class and support `simplify()` and `toString()`.
 
-| Class | Description | Example |
-|-------|-------------|---------|
-| `Sym` | Symbolic variable | `new Sym("x")` |
-| `Num` | Numeric constant | `new Num(3)` |
-| `Add` | Addition | `x + y` |
-| `Mul` | Multiplication | `x * y` |
-| `Neg` | Unary negation | `-x` |
-| `Pow` | Exponentiation | `x ** 2` |
+### Core
 
-All expression types extend the abstract `Expr` base class and implement `simplify()` and `toString()`.
+| Class | Aliases | Description |
+|---|---|---|
+| `Sym` | `Symbol` | Symbolic variable |
+| `Num` | `Number` | Numeric constant (numeric literals beside a `Sym` are auto-wrapped) |
+| `Rational` | | Exact fraction — `new Rational(1, 3)` → `1/3` |
+| `Add` | | Addition — `x + y` |
+| `Mul` | `Multiply` | Multiplication — `x * y` |
+| `Neg` | `UnaryNegation` | Unary negation — `-x` |
+| `Pow` | `Power` | Exponentiation — `x ** 2` |
+
+### Functions
+
+| Class | Description |
+|---|---|
+| `Sin`, `Cos`, `Tan` | Trigonometric |
+| `Asin`, `Acos`, `Atan` | Inverse trigonometric |
+| `Log` | Natural logarithm |
+| `Abs` | Absolute value |
+
+### Constants
+
+| Export | Description |
+|---|---|
+| `Pi` / `PiConstant` | π |
+| `E` / `EulerNumber` | Euler's number |
+| `I` / `ImaginaryUnit` | Imaginary unit |
 
 ## Simplification
 
-Calling `.simplify()` on any expression applies algebraic rules recursively:
+```ts
+const x = new Sym("x");
+const y = new Sym("y");
 
-- **Constant folding** &mdash; `2 + 3` &rarr; `5`, `2 * 3` &rarr; `6`
-- **Identity elimination** &mdash; `x + 0` &rarr; `x`, `x * 1` &rarr; `x`
-- **Zero multiplication** &mdash; `x * 0` &rarr; `0`
-- **Like-term combining** &mdash; `x + x` &rarr; `2 * x`
-- **Double negation** &mdash; `--x` &rarr; `x`
-- **Distributive property** &mdash; `(a + b) * c` &rarr; `a*c + b*c`
-- **Power rules** &mdash; `x^0` &rarr; `1`, `x^1` &rarr; `x`, `x * x` &rarr; `x^2`
+(x + x).simplify().toString();                          // "2x"
+(2 * x + 3 * x).simplify().toString();                  // "5x"
+((x + 1) * (x - 1)).simplify().toString();              // "(x^2 - 1)"
+((x + 2 * y + 1) * (x - y) - 2 * x + 3).simplify().toString();
+```
 
-## Exports
+Rules applied: constant folding, identity elimination (`+0`, `*1`, `*0`), like-term combining, double negation, distributive expansion, and power rules (`x^0`, `x^1`, `x^a * x^b`).
 
-All types are exported from the package root, with longer aliases available:
+## Differentiation
 
 ```ts
-import {
-  Expr,       // or Expression
-  Sym,        // or Symbol
-  Num,        // or Number
-  Add,
-  Mul,        // or Multiply
-  Neg,        // or UnaryNegation
-  Pow,        // or Power (type-only)
-} from "sym.js";
+import { diff } from "sym.js";
+
+diff(x ** 3, x).simplify().toString();                  // "3x^2"
+diff(new Sin(x), x).simplify().toString();              // "cos(x)"
+diff(new Cos(x) * x ** 2, x).simplify().toString();     // product rule
+diff(x ** 2 + y ** 2, x).simplify().toString();         // partial w.r.t. x → "2x"
 ```
+
+## Integration
+
+```ts
+import { integrate } from "sym.js";
+
+integrate(3 * x ** 2, x).simplify().toString();         // "x^3"
+integrate(new Sin(x), x).simplify().toString();         // "-cos(x)"
+integrate(1 / x, x).simplify().toString();              // "log(x)"
+```
+
+## Solving
+
+```ts
+import { solve } from "sym.js";
+
+solve(2 * x + 4, x).map(String);                       // ["-2"]
+solve(x ** 2 - 4, x).map(String);                      // ["-2", "2"]
+solve(x ** 2 + 2 * x + 1, x).map(String);              // ["-1"]
+```
+
+## Substitution
+
+```ts
+import { subs } from "sym.js";
+
+subs(x ** 2 + y, new Map([[x, new Num(3)]])).simplify().toString();  // "(y + 9)"
+subs(2 * x + 1, new Map([[x, y + 1]])).simplify().toString();        // "(2y + 3)"
+```
+
+## Numeric evaluation
+
+```ts
+import { evalf, Pi, E } from "sym.js";
+
+evalf(Pi);                                              // 3.141592653589793
+evalf(E ** 2);                                         // 7.38905609893065
+evalf(x ** 2 + 1, new Map([[x, 2]]));                  // 5
+```
+
+## Utilities
+
+| Export | Description |
+|---|---|
+| `sqrt(x)` | Square root — `Pow(x, Rational(1, 2))` |
+| `log(x)` | Natural log — `Log(x)` |
 
 ## API
 
 Every expression node exposes:
 
-- **`simplify(): Expr`** &mdash; returns a new, simplified expression tree.
-- **`toString(): string`** &mdash; returns a parenthesised string representation of the expression.
+- **`simplify(): Expr`** — returns a new simplified expression tree
+- **`toString(): string`** — returns a human-readable string representation
+- **`key(): string`** — returns a canonical string for structural equality checks (`a.key() === b.key()`)
 
-## Building
+## License
 
-```sh
-bun run build
-```
-
-Linting and formatting are handled by [Biome](https://biomejs.dev/):
-
-```sh
-bun run check       # lint
-bun run format      # format
-```
+MIT. Inspired by [SymPy](https://www.sympy.org).
