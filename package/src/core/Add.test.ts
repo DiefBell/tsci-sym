@@ -112,6 +112,43 @@ describe("Add.simplify() — like-term collection", () => {
 	});
 });
 
+describe("Add.toString()", () => {
+	it("positive right operand: (x + y)", () => {
+		expect(new Add(x, y).toString()).toBe("(x + y)");
+	});
+
+	it("Neg right operand renders as subtraction: (x - y)", () => {
+		expect(new Add(x, new Neg(y)).toString()).toBe("(x - y)");
+	});
+
+	it("negative Num right operand renders as subtraction: (x - 1)", () => {
+		expect(new Add(x, new Num(-1)).toString()).toBe("(x - 1)");
+	});
+
+	it("negative Rational right operand renders as subtraction: (x - 1/2)", () => {
+		expect(new Add(x, new Rational(-1, 2)).toString()).toBe("(x - 1/2)");
+	});
+
+	it("Mul with negative coefficient renders as subtraction: (x - 2y)", () => {
+		expect(new Add(x, new Mul(new Num(-2), y)).toString()).toBe("(x - 2y)");
+	});
+
+	it("Mul with coefficient -1 renders as subtraction without the 1: (x - y)", () => {
+		expect(new Add(x, new Mul(new Num(-1), y)).toString()).toBe("(x - y)");
+	});
+
+	it("regression: (x+1)(x-1) simplified does not stringify as '(x^2 + -1)'", () => {
+		const expr = new Mul(new Add(x, new Num(1)), new Add(x, new Num(-1)));
+		expect(expr.simplify().toString()).toBe("(x^2 - 1)");
+	});
+
+	it("simplified like-terms still render without spurious '+'", () => {
+		// 2x + -x = x — no negative rendering expected, just a sanity check
+		const expr = new Add(new Mul(new Num(2), x), new Neg(x));
+		expect(expr.simplify().toString()).toBe("x");
+	});
+});
+
 describe("Add.simplify() — Rational coefficients", () => {
 	it("(1/2)x + (1/2)x = x", () => {
 		expect(

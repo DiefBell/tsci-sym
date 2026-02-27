@@ -57,3 +57,25 @@ describe("Mul.key()", () => {
 		expect(new Mul(x, y).key()).not.toBe(new Add(x, y).key());
 	});
 });
+
+describe("Mul.toString()", () => {
+	it("numeric coefficient left, sym right: '2x'", () => {
+		expect(new Mul(new Num(2), x).toString()).toBe("2x");
+	});
+
+	it("coefficient -1 left renders with leading minus: '-x'", () => {
+		expect(new Mul(new Num(-1), x).toString()).toBe("-x");
+	});
+
+	it("numeric coefficient right, sym left: still '2x' (coeff pulled left)", () => {
+		expect(new Mul(x, new Num(2)).toString()).toBe("2x");
+	});
+
+	it("two syms: 'xy'", () => {
+		expect(new Mul(x, y).toString()).toBe("xy");
+	});
+
+	it("complex operands fall back to parenthesised form", () => {
+		expect(new Mul(new Add(x, y), z).toString()).toBe("((x + y) * z)");
+	});
+});

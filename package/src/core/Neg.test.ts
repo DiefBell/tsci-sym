@@ -1,4 +1,5 @@
 import { describe, expect, it } from "bun:test";
+import { Add } from "./Add";
 import { Mul } from "./Mul";
 import { Neg } from "./Neg";
 import { Num } from "./Num";
@@ -35,5 +36,19 @@ describe("Neg.key()", () => {
 
 	it("produces distinct keys for different inner expressions", () => {
 		expect(new Neg(x).key()).not.toBe(new Neg(y).key());
+	});
+});
+
+describe("Neg.toString()", () => {
+	it("negated sym: '-x'", () => {
+		expect(new Neg(x).toString()).toBe("-x");
+	});
+
+	it("negated compound expression includes inner parens: '-(x + y)'", () => {
+		expect(new Neg(new Add(x, y)).toString()).toBe("-(x + y)");
+	});
+
+	it("double negation simplifies to the inner expression", () => {
+		expect(new Neg(new Neg(x)).simplify().toString()).toBe("x");
 	});
 });
