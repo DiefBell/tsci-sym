@@ -10,7 +10,7 @@ import {
 	Sym,
 	solve,
 	subs,
-} from "sym.js";
+} from "@tsci/sym";
 
 const x = new Sym("x");
 const y = new Sym("y");

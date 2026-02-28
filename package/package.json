@@ -1,5 +1,5 @@
 {
-	"name": "sym.js",
+	"name": "@tsci/sym",
 	"version": "0.1.0",
 	"description": "A SymPy-style symbolic mathematics library for JavaScript",
 	"type": "module",

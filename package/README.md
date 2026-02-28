@@ -1,9 +1,9 @@
-# sym.js
+# @tsci/sym
 
 A SymPy-style symbolic mathematics library for JavaScript. Build, simplify, differentiate, integrate, and solve algebraic expressions using native TypeScript operators.
 
 ```ts
-import { Sym, Pi, Sin, diff, solve } from "sym.js";
+import { Sym, Pi, Sin, diff, solve } from "@tsci/sym";
 
 const x = new Sym("x");
 
@@ -14,7 +14,7 @@ diff(new Sin(x) * x ** 2, x).toString();     // product rule result
 
 ## Prerequisites
 
-sym.js uses [boperators](https://github.com/nicolo-ribaudo/tc39-proposal-operator-overloading) for operator overloading, so `+`, `-`, `*`, `/`, and `**` work directly on expression nodes. You need the boperators plugin configured for your build tool.
+@tsci/sym uses [boperators](https://github.com/nicolo-ribaudo/tc39-proposal-operator-overloading) for operator overloading, so `+`, `-`, `*`, `/`, and `**` work directly on expression nodes. You need the boperators plugin configured for your build tool.
 
 **Vite:**
 
@@ -52,7 +52,7 @@ Build with `tspc` (from [ts-patch](https://github.com/nonara/ts-patch)) instead 
 ## Installation
 
 ```sh
-npm install sym.js boperators
+npm install @tsci/sym boperators
 ```
 
 ## Expression nodes
@@ -105,7 +105,7 @@ Rules applied: constant folding, identity elimination (`+0`, `*1`, `*0`), like-t
 ## Differentiation
 
 ```ts
-import { diff } from "sym.js";
+import { diff } from "@tsci/sym";
 
 diff(x ** 3, x).simplify().toString();                  // "3x^2"
 diff(new Sin(x), x).simplify().toString();              // "cos(x)"
@@ -116,7 +116,7 @@ diff(x ** 2 + y ** 2, x).simplify().toString();         // partial w.r.t. x → 
 ## Integration
 
 ```ts
-import { integrate } from "sym.js";
+import { integrate } from "@tsci/sym";
 
 integrate(3 * x ** 2, x).simplify().toString();         // "x^3"
 integrate(new Sin(x), x).simplify().toString();         // "-cos(x)"
@@ -126,7 +126,7 @@ integrate(1 / x, x).simplify().toString();              // "log(x)"
 ## Solving
 
 ```ts
-import { solve } from "sym.js";
+import { solve } from "@tsci/sym";
 
 solve(2 * x + 4, x).map(String);                       // ["-2"]
 solve(x ** 2 - 4, x).map(String);                      // ["-2", "2"]
@@ -136,7 +136,7 @@ solve(x ** 2 + 2 * x + 1, x).map(String);              // ["-1"]
 ## Substitution
 
 ```ts
-import { subs } from "sym.js";
+import { subs } from "@tsci/sym";
 
 subs(x ** 2 + y, new Map([[x, new Num(3)]])).simplify().toString();  // "(y + 9)"
 subs(2 * x + 1, new Map([[x, y + 1]])).simplify().toString();        // "(2y + 3)"
@@ -145,7 +145,7 @@ subs(2 * x + 1, new Map([[x, y + 1]])).simplify().toString();        // "(2y + 3
 ## Numeric evaluation
 
 ```ts
-import { evalf, Pi, E } from "sym.js";
+import { evalf, Pi, E } from "@tsci/sym";
 
 evalf(Pi);                                              // 3.141592653589793
 evalf(E ** 2);                                         // 7.38905609893065
@@ -169,7 +169,7 @@ Every expression node exposes:
 
 ## Limitations
 
-sym.js is a focused library, not a full CAS. Current known limitations:
+@tsci/sym is a focused library, not a full CAS. Current known limitations:
 
 - **`solve`** handles linear and quadratic equations only. Higher-degree or transcendental equations are not supported.
 - **`integrate`** recognises specific patterns: power rule, trig rules, exponential, log, and u-substitution. Integration by parts for arbitrary expressions (e.g. `x · sin(x)`) is not supported.

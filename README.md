@@ -1,12 +1,12 @@
 # sym-js
 
-Monorepo for [sym.js](./package/) — a SymPy-style symbolic mathematics library for JavaScript.
+Monorepo for [@tsci/sym](./package/) — a SymPy-style symbolic mathematics library for JavaScript.
 
 ## Packages
 
 | Directory | Description |
 |---|---|
-| [`package/`](./package/) | The `sym.js` npm package |
+| [`package/`](./package/) | The `@tsci/sym` npm package |
 | [`example/`](./example/) | React + Vite demo app |
 | [`sympy/`](./sympy/) | SymPy Python source, kept locally as an algorithmic reference |
 

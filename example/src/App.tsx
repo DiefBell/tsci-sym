@@ -12,7 +12,7 @@ export default function App() {
 	return (
 		<div className="app">
 			<header className="app-header">
-				<h1>sym.js</h1>
+				<h1>@tsci/sym</h1>
 				<p>Symbolic math in TypeScript with operator overloading</p>
 			</header>
 
