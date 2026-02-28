@@ -33,6 +33,7 @@
       "name": "@tsci/sym",
       "version": "0.1.0",
       "devDependencies": {
+        "@boperators/cli": "^0.3.2",
         "@types/bun": "^1.1.16",
         "boperators": "^0.3.1",
       },
@@ -99,9 +100,13 @@
 
     "@biomejs/cli-win32-x64": ["@biomejs/cli-win32-x64@2.3.14", "", { "os": "win32", "cpu": "x64" }, "sha512-oizCjdyQ3WJEswpb3Chdngeat56rIdSYK12JI3iI11Mt5T5EXcZ7WLuowzEaFPNJ3zmOQFliMN8QY1Pi+qsfdQ=="],
 
+    "@boperators/cli": ["@boperators/cli@0.3.2", "", { "dependencies": { "@commander-js/extra-typings": "^13.0.0" }, "peerDependencies": { "boperators": "0.3.2", "typescript": ">=5.0.0 <5.10.0" }, "bin": { "bop": "dist/index.js", "boperate": "dist/index.js" } }, "sha512-GDl0bqIX13CHRyQ4gFFQB51tSEXozJHA6/4racUe/i2fZ7aoGiV1A/v5g/g6ZDgR6oFUpWz61odHboShtc+8PQ=="],
+
     "@boperators/plugin-ts-language-server": ["@boperators/plugin-ts-language-server@0.3.1", "", { "peerDependencies": { "boperators": "0.3.1", "typescript": ">=5.0.0 <5.10.0" } }, "sha512-IBMZB+xAFMXVQp8jdqL3JBPCIqsBibQaC8ZLwc71xON9R3QccbL3FNt7ZGWeTPqSbsBTVRGQO2kUT5n4eB9+jg=="],
 
     "@boperators/plugin-vite": ["@boperators/plugin-vite@0.3.1", "", { "peerDependencies": { "boperators": "0.3.1", "typescript": ">=5.0.0 <5.10.0", "vite": ">=4.0.0" } }, "sha512-/zfnNN7utcpy5SHnQWhcz/Zs4+gKwjvvVrFF4gxXK16F4DLiXewKxqgx+K7x0n5qGMqekL2hGtiHZ6tE+jGnqg=="],
+
+    "@commander-js/extra-typings": ["@commander-js/extra-typings@13.1.0", "", { "peerDependencies": { "commander": "~13.1.0" } }, "sha512-q5P52BYb1hwVWE6dtID7VvuJWrlfbCv4klj7BjUUOqMz4jbSZD4C9fJ9lRjL2jnBGTg+gDDlaXN51rkWcLk4fg=="],
 
     "@esbuild/aix-ppc64": ["@esbuild/aix-ppc64@0.25.12", "", { "os": "aix", "cpu": "ppc64" }, "sha512-Hhmwd6CInZ3dwpuGTF8fJG6yoWmsToE+vYgD4nytZVxcu1ulHpUQRAB1UJ8+N1Am3Mz4+xOByoQoSZf4D+CpkA=="],
 
