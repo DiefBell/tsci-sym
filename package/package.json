@@ -39,7 +39,7 @@
 	"scripts": {
 		"build": "tsc && bun run validate",
 		"watch": "tsc -w",
-		"validate": "bunx boperate validate",
+		"validate": "boperate validate",
 		"typecheck": "tsc --no-emit",
 		"test": "bun test"
 	},

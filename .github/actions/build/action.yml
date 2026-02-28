@@ -8,6 +8,7 @@ runs:
 
         - name: Install dependencies
           run: bun install --frozen-lockfile
+          working-directory: package
           shell: bash
 
         - name: Build package
