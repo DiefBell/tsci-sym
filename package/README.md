@@ -1,5 +1,7 @@
 # @tsci/sym
 
+![@tsci/sym logo](https://github.com/DiefBell/tsci-sym/blob/ea59d066efa92e513bbcd698c3a282c56d5576a6/logo.png)
+
 A SymPy-style symbolic mathematics library for JavaScript. Build, simplify, differentiate, integrate, and solve algebraic expressions using native TypeScript operators.
 
 ```ts
