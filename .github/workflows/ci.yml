@@ -1,0 +1,34 @@
+name: CI
+
+on:
+    push:
+        branches: ["**"]
+        tags-ignore: ["v*"] # publish.yml handles tagged releases
+    pull_request:
+
+jobs:
+    lint:
+        name: Lint
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+
+            - uses: oven-sh/setup-bun@v2
+
+            - name: Install dependencies
+              run: bun install --frozen-lockfile
+
+            - name: Biome check
+              run: bun run check
+
+    build-and-test:
+        name: Build and test
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+
+            - uses: ./.github/actions/build
+
+            - name: Run tests
+              run: bun test
+              working-directory: package

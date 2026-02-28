@@ -1,0 +1,16 @@
+name: Build
+description: Set up Bun, install dependencies, and build the @tsci/sym package
+
+runs:
+    using: composite
+    steps:
+        - uses: oven-sh/setup-bun@v2
+
+        - name: Install dependencies
+          run: bun install --frozen-lockfile
+          shell: bash
+
+        - name: Build package
+          run: bun run build
+          working-directory: package
+          shell: bash
